@@ -157,6 +157,11 @@ export interface Product {
   updatedAt: Date; // Same as above
   rating: number | null;
   review: Review[];
+  dimension?: {
+    width : number;
+    height: number;
+    dept: number;
+  }
 }
 
 export interface Review {
@@ -245,9 +250,10 @@ export interface Items {
   modelNumber: string;
   image: string;
   rating: number;
-  color: string;
-  model: string;
+  // color: string;
+  // model: string;
   quantity: number;
+  
 }
 
 
@@ -389,3 +395,10 @@ export interface BannerData {
   url: string,
   images: string[],
 }
+
+
+export type ImageItem = {
+  preview: string;
+  url?: string;
+  loading: boolean;
+};

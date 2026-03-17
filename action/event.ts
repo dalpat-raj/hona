@@ -3,12 +3,13 @@ import { db } from "@/lib/db";
 import { EventCreate } from "@/lib/definations";
 import { EventCreateSchema } from "@/schema";
 import { revalidatePath } from "next/cache";
-import { currentRole } from "@/lib/data";
+// import { currentRole } from "@/lib/data";
 import { UserRole } from "@prisma/client";
 
 
 export async function eventAdd(products: number[], data: EventCreate) {
-    const role = await currentRole();
+    // const role = await currentRole();
+    const role = "ADMIN";
     const { title, description, discount, endDate } = EventCreateSchema.parse(data);
     
     try {

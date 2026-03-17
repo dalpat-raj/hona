@@ -1,37 +1,37 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
-}
- 
 generator client {
   provider = "prisma-client-js"
 }
- 
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
 enum UserRole {
   ADMIN
   USER
 }
 
 model User {
-  id            String      @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
   email         String          @unique
   emailVerified DateTime?
-  password       String?
+  password      String?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  role           UserRole   @default(USER)
-  address        Address?  @relation(fields: [addressId], references: [id])
-  addressId      Int?      @unique
-  orders         Order[]
-  reviews        Review[]
+  role          UserRole        @default(USER)
+  address       Address?        @relation(fields: [addressId], references: [id])
+  addressId     Int?            @unique
+  orders        Order[]
+  reviews       Review[]
   Authenticator Authenticator[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -44,39 +44,39 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 // remove it later be careful
 model VerificationToken {
-  id  String @id @default(cuid())
-  email String
-  token      String @unique
-  expires    DateTime
- 
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
   @@unique([email, token])
 }
- 
+
 model PasswordResetToken {
-  id String @id @default(cuid())
-  email String
-  token String @unique
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
   expires DateTime
 
   @@unique([email, token])
@@ -92,9 +92,9 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([userId, credentialID])
 }
 
@@ -106,25 +106,25 @@ model Address {
   city            String
   state           String
   pinCode         String?
-  user            User? 
-  userId          String?    @unique // Allows only one address per user
+  user            User?
+  userId          String? @unique // Allows only one address per user
 }
 
 model Order {
-  id             Int      @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   items          OrderItem[]
   subTotal       Float?
   shippingCharge Float?
   totalAmount    Float
   discountPrice  Float?
-  status         String @default("Order Confirmed")
+  status         String          @default("Order Confirmed")
   statusHistory  StatusHistory[]
-  paymentInfo    PaymentInfo?  @relation(fields: [paymentInfoId], references: [id])
-  paymentInfoId      Int?      @unique
-  userId         String?    
-  user           User?     @relation(fields: [userId], references: [id])
-  createdAt      DateTime @default(now())
-  deliverAt      DateTime @default(now())
+  paymentInfo    PaymentInfo?    @relation(fields: [paymentInfoId], references: [id])
+  paymentInfoId  Int?            @unique
+  userId         String?
+  user           User?           @relation(fields: [userId], references: [id])
+  createdAt      DateTime        @default(now())
+  deliverAt      DateTime        @default(now())
 }
 
 model StatusHistory {
@@ -132,38 +132,37 @@ model StatusHistory {
   orderId   Int
   status    String
   changedAt DateTime @default(now())
-  
-  order     Order    @relation(fields: [orderId], references: [id])
+
+  order Order @relation(fields: [orderId], references: [id])
 }
 
 model OrderItem {
-  id         Int     @id @default(autoincrement())
-  orderId    Int
-  productId  Int
-  title      String
-  price      Float
-  stock      Int
+  id          Int    @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  title       String
+  price       Float
+  stock       Int
   modelNumber String
-  image      String
-  rating     Float 
-  color      String
-  model      String
-  quantity   Int
+  image       String
+  rating      Float
+  color       String
+  model       String
+  quantity    Int
 
-  order      Order   @relation(fields: [orderId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
 }
 
 model PaymentInfo {
-  id Int @id @default(autoincrement())
-  type String
+  id     Int    @id @default(autoincrement())
+  type   String
   status String
-  order Order?
+  order  Order?
 }
 
-
 model Product {
-  id            Int     @id @default(autoincrement())
-  title         String 
+  id            Int      @id @default(autoincrement())
+  title         String
   description   String
   modelNumber   String
   stock         Int
@@ -171,72 +170,67 @@ model Product {
   sellingPrice  Float
   collection    String
   color         String
-  model         String[] 
-  feature       String[] 
-  images        String[] 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  model         String[]
+  feature       String[]
+  images        String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   review        Review[]
-  rating        Float? @default(0)
+  rating        Float?   @default(0)
 
-  events        EventProduct[] 
+  events EventProduct[]
 }
 
 model Event {
-  id          Int          @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   title       String
   description String
   discount    Float
   endDate     DateTime
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime       @default(now())
   products    EventProduct[] // List of associated products
 }
 
 model EventProduct {
-  id       Int      @id @default(autoincrement())
-  event    Event    @relation(fields: [eventId], references: [id])
-  eventId  Int
-  product  Product  @relation(fields: [productId], references: [id])
-  productId Int 
+  id        Int     @id @default(autoincrement())
+  event     Event   @relation(fields: [eventId], references: [id])
+  eventId   Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
 }
 
 model Review {
-  id            Int       @id @default(autoincrement())
-  name String
-  email String
-  message String
-  images String[]
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  images    String[]
   productId Int
-  rating Float
-  product        Product?  @relation(fields: [productId], references: [id])   
-  user           User?     @relation(fields: [email], references: [email])
+  rating    Float
+  product   Product? @relation(fields: [productId], references: [id])
+  user      User?    @relation(fields: [email], references: [email])
   createdAt DateTime @default(now())
 }
 
 model Collection {
-  id  Int @id @default(autoincrement())
+  id    Int     @id @default(autoincrement())
   title String
   image String?
 }
 
 model Coupon {
-  id            Int      @id @default(autoincrement())
-  code          String   @unique
-  discount      Float    // Discount value (e.g., 10 for 10%)
-  isActive      Boolean  @default(true)
+  id             Int      @id @default(autoincrement())
+  code           String   @unique
+  discount       Float // Discount value (e.g., 10 for 10%)
+  isActive       Boolean  @default(true)
   expirationDate DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Banner {
-  id Int @id @default(autoincrement())
-  url String
-  images String[]
+  id        Int      @id @default(autoincrement())
+  url       String
+  images    String[]
   createdAt DateTime @default(now())
 }
-
-
-
-
-

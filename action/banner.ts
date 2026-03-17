@@ -1,17 +1,17 @@
 "use server";
 import { db } from "@/lib/db";
 import { revalidatePath } from 'next/cache';
-import { currentRole } from "@/lib/data";
+// import { currentRole } from "@/lib/data";
 import { UserRole } from "@prisma/client";
 
 
 export async function createBanner(images: string[] | any ,formData: FormData) {
     const url = formData.get('url') as string;
-    const role = await currentRole();
+    // const role = await currentRole();
     try {
-        if (role !== UserRole.ADMIN) {
-            return {error: "User not verify!"}
-        }
+        // if (role !== UserRole.ADMIN) {
+        //     return {error: "User not verify!"}
+        // }
         
         if(!url || !images){
             return({error: 'All fields are required!'})

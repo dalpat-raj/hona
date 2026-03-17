@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
+
 import { db } from "@/lib/db";
-import { Collections, FormData, Product} from "./definations";
+import { FormData, Product} from "./definations";
 import { subMonths, format } from 'date-fns';
 
 export const getUserByEmail = async (email: string) => {
@@ -44,57 +44,60 @@ export const getPasswordResetTokenByEmail = async (email: string) => {
   }
 }
 
-export const currentUser = async () => {
-  const session = await auth();
+// export const currentUser = async () => {
+//   const session = await auth();
 
-  return session?.user || null;
-}
+//   return session?.user || null;
+// }
 
-export const getCurrentUser = async () => {
-  const session = await auth();
-  const email = session?.user.email
-  const user = await db.user.findFirst({
-      where: {
-        email: email
-      },
-      include: {
-        address: true,
-      }
-    })
+// export const getCurrentUser = async () => {
+//   const session = await auth();
+//   const email = session?.user.email
+//   const user = await db.user.findFirst({
+//       where: {
+//         email: email
+//       },
+//       include: {
+//         address: true,
+//       }
+//     })
 
-  return user;
-}
-export const getCurrentUserReviews = async () => {
-  const session = await auth();
-  const email = session?.user.email
-  const user = await db.user.findFirst({
-      where: {
-        email: email
-      },
-      include: {
-        reviews: true,
-      }
-    })
+//   return user;
+// }
+// export const getCurrentUserReviews = async () => {
+//   const session = await auth();
+//   const email = session?.user.email
+//   const user = await db.user.findFirst({
+//       where: {
+//         email: email
+//       },
+//       include: {
+//         reviews: true,
+//       }
+//     })
 
-  return user;
-}
+//   return user;
+// }
 
-export const currentRole = async () => {
-  const session = await auth();
+// export const currentRole = async () => {
+//   const session = await auth();
 
-  return session?.user?.role;
-}
+//   return session?.user?.role;
+// }
 
-export async function getProducts () {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-  const products = await db.product.findMany({
-    include: {
-      review: true,
-    },
-    orderBy: { createdAt: 'desc' },
-    take: 10,
-  })
-  return products
+export async function getProducts() {
+  try {
+    const products = await db.product.findMany({
+      include: { review: true },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    });
+
+    return { data: products, error: null };
+  } catch (error) {
+    console.error("Product fetch error:", error);
+    return { data: [], error: "Failed to fetch products" };
+  }
 }
 
 export async function getProductDetails(title: string){
@@ -358,32 +361,38 @@ export async function getEvents(){
   
 }
 
-export async function getEventRunning(){
+export async function getEventRunning() {
   try {
-      const events = await db.event.findFirst({
-        orderBy: {
-          createdAt: 'desc',
-        },
-        include:{
-          products: {
-            include: {
-              product: {
-                include: {
-                  review: true,
-                }
+    const event = await db.event.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        products: {
+          include: {
+            product: {
+              include: {
+                review: true,
               },
-              
-            }
-          }
-        }
-      })
+            },
+          },
+        },
+      },
+    });
 
-    return events;
+    if (!event) {
+      return { data: null, error: null }; // simply no event
+    }
+
+    return { data: event, error: null };
   } catch (error) {
-    console.error("events does not exists:", error);
-    throw new Error("events does not exists");
-  } 
-  
+    console.error("Event fetch error:", error);
+
+    return {
+      data: null,
+      error: "Unable to load event",
+    };
+  }
 }
 
 export async function getCoupons(){
@@ -432,7 +441,7 @@ export async function deactivateCoupons(){
 
 
 export async function getBanner(){
-  try {
+
       const banners = await db.banner.findMany({
         orderBy: {
           createdAt: 'desc',
@@ -443,16 +452,12 @@ export async function getBanner(){
         throw new Error("no banner founds");
       }
 
-    return banners;
-  } catch (error) {
-    console.error("banner does not exists:", error);
-    throw new Error("banner does not exists");
-  } 
+    return banners ;
+
   
 }
 
 export async function getBannerForHome(){
-  try {
       const banners = await db.banner.findMany({
         orderBy: {
           createdAt: 'desc',
@@ -464,11 +469,7 @@ export async function getBannerForHome(){
         throw new Error("no banner founds");
       }
 
-    return banners;
-  } catch (error) {
-    console.error("banner does not exists:", error);
-    throw new Error("banner does not exists");
-  } 
+    return banners ?? null;
   
 }
 
@@ -498,8 +499,8 @@ export async function fetchCardData() {
         totalOrders
       };
     } catch (error) {
-      console.error('Database Error:', error);
-      throw new Error('Failed to fetch card data.');
+      // console.error('Database Error:', error);
+      // throw new Error('Failed to fetch card data.');
     }
 }
 

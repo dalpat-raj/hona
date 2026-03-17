@@ -1,3 +1,4 @@
+import { Colors } from "chart.js";
 import { withUt } from "uploadthing/tw";
 export default withUt({
 	darkMode: ["class"],
@@ -8,13 +9,15 @@ export default withUt({
 	],
 	theme: {
     	extend: {
-    		backgroundImage: {
-    			blackOverlay: 'linear-gradient(rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.6) 100%)'
+    		backgroundColor: {
+    			bg: '#e9f4d6'
+    			// bg: '#ddefbf'
     		},
     		boxShadow: {
-    			'custom-shadow': '0px 0px 8px -2px rgba(0,0,0,0.66)'
+    			'custom-shadow': '0px 0px 8px -2px rgba(0,0.9,0,0.66)'
     		},
-    		colors: {
+    		colors: { 
+				text_green: "0e550e",
     			customYellow: '#ffc029',
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',

@@ -1,13 +1,12 @@
-import CreateEvent from '@/app/ui/dashboard/event/createEvent/CreateEvent'
-import React from 'react'
-
+import CreateEvent from "@/app/ui/dashboard/event/createEvent/CreateEvent";
+import React from "react";
 
 const page = () => {
   return (
     <div>
-      <CreateEvent/>
+      <CreateEvent />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

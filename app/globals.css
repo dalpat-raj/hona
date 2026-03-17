@@ -227,3 +227,24 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 
+@layer utilities {
+ .mixerColor {
+    background: linear-gradient(90deg,#F5A623,#C98A6E,#9C5B8E,#6F3C9E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* BACKGROUND GRADIENT */
+  .bg-mixerColor {
+    background: linear-gradient(90deg,#F5A623,#C98A6E,#9C5B8E,#6F3C9E);
+  }
+
+  /* BUTTON STYLE */
+  .btn-mixerColor {
+    background: linear-gradient(90deg,#F5A623,#C98A6E,#9C5B8E,#6F3C9E);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+}

@@ -1,7 +1,7 @@
-'use client';
- 
-import { useEffect } from 'react';
- 
+"use client";
+
+import { useEffect } from "react";
+
 export default function Error({
   error,
   reset,
@@ -12,15 +12,15 @@ export default function Error({
   useEffect(() => {
     console.error(error);
   }, [error]);
- 
+
   return (
     <main className="flex h-[50vh] flex-col items-center justify-center">
-      <h2 className="text-center">Opps... Something went wrong 😪!</h2>
+      <h2 className="text-center text-green-700">
+        Opps... Something went wrong 😪!
+      </h2>
       <button
-        className="mt-4 rounded-md bg-[#333] px-4 py-2 text-sm text-white transition-colors hover:bg-gray-800"
-        onClick={
-          () => reset()
-        }
+        className="mt-4 rounded-md bg-green-600 px-4 py-2 text-sm text-white transition-colors hover:bg-green-900"
+        onClick={() => reset()}
       >
         Try again
       </button>

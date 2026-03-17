@@ -54,27 +54,29 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         />
       </div>
       <div className="w-full">
-        <p className="text-[14px] leading-none">{item.title}...</p>
-        <p className="text-[13px] text-gray-400">Model - {item.model}</p>
+        <p className="text-[14px] text-green-700 leading-none">
+          {item.title}...
+        </p>
+        <p className="text-[13px] text-green-400">Model - {item.model}</p>
         <div className="w-full flex justify-between items-center gap-4">
-          <div className="mt-2 h-8 w-28 border border-gray-300 bg-white grid grid-cols-4 items-center">
+          <div className="mt-2 h-8 w-28 border border-green-600 grid grid-cols-4 items-center">
             <button
               onClick={() => decrement(item)}
-              className="col-span-1 h-full flex items-center justify-center hover:bg-gray-200 text-gray-700"
+              className="col-span-1 h-full flex items-center justify-center hover:bg-green-200 text-green-700"
             >
               <FaMinus size={10} />{" "}
             </button>
-            <p className="col-span-2 text-center text-black text-[14px]">
+            <p className="col-span-2 text-center text-green-900 text-[14px]">
               {item.quantity}
             </p>
             <button
               onClick={() => increment(item)}
-              className="col-span-1 h-full flex items-center justify-center hover:bg-gray-200 text-gray-700"
+              className="col-span-1 h-full flex items-center justify-center hover:bg-green-200 text-green-700"
             >
               <FaPlus size={10} />{" "}
             </button>
           </div>
-          <p className="text-[14px] leading-none">
+          <p className="text-[14px] text-green-700 leading-none">
             Rs. {item.price?.toFixed(2)}
           </p>
         </div>

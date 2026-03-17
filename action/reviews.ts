@@ -1,5 +1,4 @@
 "use server"
-import { currentRole } from "@/lib/data";
 import { UserRole } from "@prisma/client";
 import { db } from "@/lib/db";
 import { revalidatePath } from 'next/cache';
@@ -128,7 +127,8 @@ export async function adminReviewDelete(formData: FormData){
   if (isNaN(idNumber) || isNaN(productIdNumber) || isNaN(ratingNumber)) {
     return { error: "Invalid input values ❌" };
   }
-  const role = await currentRole()
+  // const role = await currentRole()
+  const role = await "ADMIN"
   
   try {  
     if (role !== UserRole.ADMIN) {

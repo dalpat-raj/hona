@@ -1,6 +1,9 @@
 import * as z from "zod";
 
 export const LoginSchema = z.object({
+    phone: z.string().email({
+        message: "Phone is required"
+    }),
     email: z.string().email({
         message: "Email is required"
     }),
@@ -107,17 +110,30 @@ export const reviewSchema = z.object({
 
 // dashboard
 export const ProductSchema = z.object({
-    title: z.string().min(1, "Title is required"),
+    title: z.string().min(1, "Name is required"),
     description: z.string().min(10, "Description is required"),
     modelNumber: z.string().min(1, "Model number is required"),
+    sku: z.string().min(5, {message: "Stock keeping unit are required!"}),
+    barcode: z.string().optional(),
+    brand: z.string().min(5,{message: "minium 5 word"}).max(150),
     stock: z.number().int().nonnegative("Stock cannot be negative"),
     originalPrice: z.number().positive("Original price must be positive"),
     sellingPrice: z.number().positive("Selling price must be positive"),
     collection: z.string().min(1, "Collection is required"),
-    color: z.string().min(1, "Color is required"),
+    // color: z.string().min(1, "Color is required"),
     model: z.array(z.string()).nonempty("Model cannot be empty"),
     feature: z.array(z.string()).nonempty("Feature array cannot be empty"),
     images: z.array(z.string()).nonempty("Images array cannot be empty"),
+    dimension: z.object({
+        width: z.coerce.number().min(0).max(9999).multipleOf(0.001).optional(),
+        height: z.coerce.number().min(0).max(9999).multipleOf(0.001).optional(),
+        depth: z.coerce.number().min(0).max(9999).multipleOf(0.001).optional(),
+        dimensionUnit: z.enum(["cm"]).default("cm"),
+        weightValue: z.coerce.number().min(0.1, { message: "Weight must be at least 0.1" }).max(20).multipleOf(0.001),
+    }).refine(data => data.weightValue > 0, {
+        message: "Weight value must be positive",
+        path: ["weightValue"]
+    }),
   });
 
 

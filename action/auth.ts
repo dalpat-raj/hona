@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+// import { signIn, signOut } from "@/auth";
 import { getPasswordResetTokenByToken, getUserByEmail } from "@/lib/data";
 import { db } from "@/lib/db";
 // import { saltAndHashPassword } from "@/lib/helpers";
@@ -13,39 +13,39 @@ import { z } from "zod";
 
 
 
-export const Login= async(
-  values:z.infer<typeof LoginSchema>,
-  callbackUrl?: string | null,
-) => {
-  const validatedFields = LoginSchema.safeParse(values);
+// export const Login= async(
+//   values:z.infer<typeof LoginSchema>,
+//   callbackUrl?: string | null,
+// ) => {
+//   const validatedFields = LoginSchema.safeParse(values);
 
-  if(!validatedFields.success){
-    return { error: "Invalid fields!" };
-  }
+//   if(!validatedFields.success){
+//     return { error: "Invalid fields!" };
+//   }
 
-  const { email, password } = validatedFields.data;
+//   const { email, password } = validatedFields.data;
 
-  try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
-    });
+//   try {
+//     await signIn("credentials", {
+//       email,
+//       password,
+//       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+//     });
 
-    return {success: "login success"}
-  } catch (error: any) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return {error: "Invalid credentials!"}
-        default:
-          return {error:"Something went wrong!"}
-      }
-    }
+//     return {success: "login success"}
+//   } catch (error: any) {
+//     if (error instanceof AuthError) {
+//       switch (error.type) {
+//         case "CredentialsSignin":
+//           return {error: "Invalid credentials!"}
+//         default:
+//           return {error:"Something went wrong!"}
+//       }
+//     }
 
-    throw error;
-  }
-};
+//     throw error;
+//   }
+// };
 
 export const Register= async(values:z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -76,9 +76,9 @@ export const Register= async(values:z.infer<typeof RegisterSchema>) => {
   return {success: "Register success"}
 };
 
-export const Logout = async () => {
-  await signOut();
-}
+// export const Logout = async () => {
+//   await signOut();
+// }
 
 export const Reset = async (values: z.infer<typeof ResetSchema>) => {
   const validatedFields = ResetSchema.safeParse(values);

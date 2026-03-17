@@ -1,65 +1,69 @@
-'use client';
-import Label from '@/app/ui/label/Label';
-import React, { useTransition } from 'react';
-import { eventAdd } from '@/action/event';
-import { caveat } from '@/app/ui/Fonts';
-import { toast } from 'sonner';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { EventCreateSchema } from '@/schema';
-import { EventCreate } from '@/lib/definations';
-import { useRouter } from 'next/navigation';
-import ButtonWithSpinner from '@/app/ui/button/ButtonWithSpinner';
-
+"use client";
+import Label from "@/app/ui/label/Label";
+import React, { useTransition } from "react";
+import { eventAdd } from "@/action/event";
+import { caveat } from "@/app/ui/Fonts";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EventCreateSchema } from "@/schema";
+import { EventCreate } from "@/lib/definations";
+import { useRouter } from "next/navigation";
+import ButtonWithSpinner from "@/app/ui/button/ButtonWithSpinner";
 
 const CreateEvent = () => {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition(); 
-  const [productId, setProductId] = React.useState<number | ''>(''); 
-  const [products, setProducts] = React.useState<number[]>([]); 
-  const { 
-    register, 
-    handleSubmit, 
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [productId, setProductId] = React.useState<number | "">("");
+  const [products, setProducts] = React.useState<number[]>([]);
+  const {
+    register,
+    handleSubmit,
     reset,
-    formState: {errors}, 
+    formState: { errors },
   } = useForm<EventCreate>({
     resolver: zodResolver(EventCreateSchema),
-  })
+  });
 
   const handleAddProduct = () => {
     if (productId && !products.includes(Number(productId))) {
       setProducts((prev) => [...prev, Number(productId)]);
-      setProductId(''); 
+      setProductId("");
     }
   };
 
-  async function handleEventSubmit(data:EventCreate){
+  async function handleEventSubmit(data: EventCreate) {
     startTransition(() => {
       eventAdd(products, data)
-      .then((res)=>{
-        router.push("/dashboard/events")
-        if (res?.success) toast.success(res.success)
-        if(res?.error) toast.error(res.error)
-      }).catch(()=>{
-        toast.error('Error something wrong 😢')
-      }).finally(()=>{
-        reset();
-      })
-      setProducts([]); 
+        .then((res) => {
+          router.push("/dashboard/events");
+          if (res?.success) toast.success(res.success);
+          if (res?.error) toast.error(res.error);
+        })
+        .catch(() => {
+          toast.error("Error something wrong 😢");
+        })
+        .finally(() => {
+          reset();
+        });
+      setProducts([]);
     });
   }
-  
 
   return (
-    <div className='flex justify-center items-center my-4 max-sm:my-0'>
-      <div className='w-1/2 max-sm:w-full shadow-custom-shadow p-4 px-8 max-sm:p-4 rounded-lg max-sm:border-0'>
-        <div className='text-center mb-8'>
-          <h2 className={`${caveat.className} text-[26px] font-bold text-gray-700`}>Create Events</h2>
+    <div className="flex justify-center items-center my-4 max-sm:my-0">
+      <div className="w-1/2 max-sm:w-full bg-white shadow-custom-shadow p-4 px-8 max-sm:p-4 rounded-lg max-sm:border-0">
+        <div className="text-center mb-8">
+          <h2
+            className={`${caveat.className} text-[26px] font-bold text-green-900`}
+          >
+            Create Events
+          </h2>
         </div>
 
-        <div className=''>
+        <div className="">
           <form onSubmit={handleSubmit(handleEventSubmit)}>
-            <div className='mb-4'>
+            <div className="mb-4">
               <Label htmlFor="title" title="Title" />
               <input
                 {...register("title")}
@@ -67,33 +71,33 @@ const CreateEvent = () => {
                 id="title"
                 name="title"
                 placeholder="Title"
-                className='w-full py-1 px-4 border border-gray-200 bg-white rounded-sm outline-none focus:border-gray-400 text-sm text-gray-500'
+                className="w-full py-1 px-4 border border-green-200 bg-white rounded-sm outline-none focus:border-green-400 text-sm text-green-900"
               />
-              {
-                errors.title && (
-                  <p className='text-red-500 text-[13px]'>{errors.title.message}</p>
-                )
-              }
+              {errors.title && (
+                <p className="text-red-500 text-[13px]">
+                  {errors?.title?.message}
+                </p>
+              )}
             </div>
-            <div className='mb-4'>
+            <div className="mb-4">
               <Label htmlFor="desc" title="Description" />
-              <textarea 
+              <textarea
                 {...register("description")}
                 id="desc"
-                name="description" 
+                name="description"
                 rows={4}
-                placeholder='Type your good description!'
-                className='w-full text-[14px] font-normal py-1 px-2 border border-gray-200 rounded-lg focus:outline-gray-400'
+                placeholder="Type your good description!"
+                className="w-full text-[14px] font-normal py-1 px-2 border border-green-200 rounded-lg focus:outline-green-400 text-green-900"
               />
-              {
-                errors.description && (
-                  <p className='text-red-500 text-[13px]'>{errors.description.message}</p>
-                )
-              }
+              {errors.description && (
+                <p className="text-red-500 text-[13px]">
+                  {errors?.description?.message}
+                </p>
+              )}
             </div>
-            
-            <div className='w-full flex items-center gap-4 mb-4'>
-              <div className='w-full'>
+
+            <div className="w-full flex items-center gap-4 mb-4">
+              <div className="w-full">
                 <Label htmlFor="disc" title="Discount" />
                 <input
                   {...register("discount")}
@@ -101,60 +105,70 @@ const CreateEvent = () => {
                   id="disc"
                   name="discount"
                   placeholder="Discount"
-                  className='w-full py-1 px-4 border border-gray-200 bg-white rounded-sm outline-none focus:border-gray-400 text-sm text-gray-500'
+                  className="w-full py-1 px-4 border border-green-200 bg-white rounded-sm outline-none focus:border-green-400 text-sm text-green-900"
                 />
-                {
-                errors.discount && (
-                  <p className='text-red-500 text-[13px]'>{errors.discount.message}</p>
-                )
-                }
+                {errors.discount && (
+                  <p className="text-red-500 text-[13px]">
+                    {errors?.discount?.message}
+                  </p>
+                )}
               </div>
-              <div className='w-full'>
+              <div className="w-full">
                 <Label htmlFor="endDate" title="End Date" />
                 <input
-                    {...register("endDate")} 
-                    id="endDate"
-                    type="date"
-                    className='w-full py-1 px-4 border border-gray-200 bg-white rounded-sm outline-none focus:border-gray-400 text-sm text-gray-500'
+                  {...register("endDate")}
+                  id="endDate"
+                  type="date"
+                  className="w-full py-1 px-4 border border-green-200 bg-white rounded-sm outline-none focus:border-green-400 text-sm text-green-900"
                 />
                 {errors.endDate && (
-                    <p className='text-red-500 text-[13px]'>{errors.endDate.message}</p>
+                  <p className="text-red-500 text-[13px]">
+                    {errors.endDate.message}
+                  </p>
                 )}
               </div>
             </div>
 
             {/* Input for Product ID */}
-              <div className='mb-4'>
-               <Label htmlFor="prodId" title="Select Product" />
-               <div className='flex gap-2'>
-                 <input
-                   type="number"
-                   id="prodId"
-                   value={productId}
-                   onChange={(e) => setProductId(e.target.value === '' ? '' : Number(e.target.value))}
-                   placeholder="Product ID"
-                   className='w-full py-1 px-4 border border-gray-200 bg-white rounded-sm outline-none focus:border-gray-400 text-sm text-gray-500'
-                 />
-                 <button type='button' onClick={handleAddProduct} className='bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-black transition'>
-                   Add
-                 </button>
-               </div>
-               {products?.length > 0 && (
-                 <div className='mt-2 border border-gray-200 p-4'>
-                   <p className='text-[14px]'>Selected Products: ID</p>
-                   <ul className='flex gap-2'>
-                     {products?.map((id) => (
-                       <li className='text-[13px]' key={id}>{id}</li>
-                     ))}
-                   </ul>
-                 </div>
-               )}
-             </div> 
+            <div className="mb-4">
+              <Label htmlFor="prodId" title="Select Product" />
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  id="prodId"
+                  value={productId}
+                  onChange={(e) =>
+                    setProductId(
+                      e.target.value === "" ? "" : Number(e.target.value),
+                    )
+                  }
+                  placeholder="Product ID"
+                  className="w-full py-1 px-4 border border-green-200 bg-white rounded-sm outline-none focus:border-green-400 text-sm text-green-900"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddProduct}
+                  className=" bg-green-600 border text-white border-green-200 px-4 py-2 rounded-md hover:bg-green-900 transition"
+                >
+                  Add
+                </button>
+              </div>
+              {products?.length > 0 && (
+                <div className="mt-2 border border-gray-200 p-4">
+                  <p className="text-[14px]">Selected Products: ID</p>
+                  <ul className="flex gap-2">
+                    {products?.map((id) => (
+                      <li className="text-[13px]" key={id}>
+                        {id}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
 
-            <div className='mt-4 h-8'>
-              <ButtonWithSpinner loading={isPending}>
-                Create
-              </ButtonWithSpinner>
+            <div className="mt-4 h-8">
+              <ButtonWithSpinner loading={isPending}>Create</ButtonWithSpinner>
             </div>
           </form>
         </div>
@@ -164,27 +178,6 @@ const CreateEvent = () => {
 };
 
 export default CreateEvent;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 'use client';
 // import Label from '@/app/ui/label/Label';
@@ -200,24 +193,24 @@ export default CreateEvent;
 
 // const CreateEvent = (props: Props) => {
 //   const [endDate, setEndDate] = React.useState<Date | any>();
-//   const [productId, setProductId] = React.useState<number | ''>(''); 
-//   const [products, setProducts] = React.useState<number[]>([]); 
+//   const [productId, setProductId] = React.useState<number | ''>('');
+//   const [products, setProducts] = React.useState<number[]>([]);
 //   const [loading, setLoading] = useState<boolean>(false)
 
 //   const handleAddProduct = () => {
 //     if (productId && !products.includes(Number(productId))) {
 //       setProducts((prev) => [...prev, Number(productId)]);
-//       setProductId(''); 
+//       setProductId('');
 //     }
 //   };
 
 //   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-//     event.preventDefault(); 
+//     event.preventDefault();
 //     setLoading(true)
-//     const formData = new FormData(event.currentTarget); 
+//     const formData = new FormData(event.currentTarget);
 //     try {
 //       const eventAddAction = eventAdd.bind(null, products, endDate);
-//       const {success, error} = await eventAddAction(formData); 
+//       const {success, error} = await eventAddAction(formData);
 //        if(success) toast.success(success);
 //        if(error) toast.error(error);
 //     } catch (error) {
@@ -254,16 +247,16 @@ export default CreateEvent;
 //             </div>
 //             <div className='mb-4'>
 //               <Label htmlFor="desc" title="Description" />
-//               <textarea 
+//               <textarea
 //                 id="desc"
-//                 name="description" 
+//                 name="description"
 //                 rows={4}
 //                 placeholder='Type your good description!'
 //                 className='w-full text-[14px] font-normal py-1 px-2 border border-gray-200 rounded-lg focus:outline-gray-400'
 //                 required
 //               />
 //             </div>
-            
+
 //             <div className='flex items-center gap-4 mb-4'>
 //               <div className=''>
 //                 <Label htmlFor="disc" title="Discount" />
@@ -308,7 +301,7 @@ export default CreateEvent;
 //                    </ul>
 //                  </div>
 //                )}
-//              </div> 
+//              </div>
 
 //             <div className='mt-4'>
 //               <button type='submit' className="w-full hover:bg-gray-800 text-white px-4 py-2 rounded-md bg-[#333] transition">Submit</button>

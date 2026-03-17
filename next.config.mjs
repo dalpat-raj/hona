@@ -17,6 +17,10 @@ const nextConfig = {
           pathname: '/**',
         },
         {
+        protocol: "https",
+        hostname: "ik.imagekit.io",
+      },
+        {
           protocol: 'https', 
           hostname: 'lh3.googleusercontent.com',
           port: '', 

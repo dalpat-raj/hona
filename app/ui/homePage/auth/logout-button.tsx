@@ -1,22 +1,19 @@
-"use client"
+"use client";
 
-import { Logout } from "@/action/auth";
+// import { Logout } from "@/action/auth";
 
 interface LogoutButtonProps {
-    children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
-export const LogoutButton = ({
-    children
-}: LogoutButtonProps) => {
-    const onClick = () => {
-        Logout();
-    }
+export const LogoutButton = ({ children }: LogoutButtonProps) => {
+  const onClick = () => {
+    // Logout();
+  };
 
-    return (
-        <span onClick={onClick} className="cursor-pointer">
-            {children}
-        </span>
-    )
-}
-
+  return (
+    <span onClick={onClick} className="cursor-pointer">
+      {children}
+    </span>
+  );
+};
