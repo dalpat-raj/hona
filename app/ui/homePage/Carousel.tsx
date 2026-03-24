@@ -26,7 +26,7 @@ export function CarouselHome({ banners }: { banners: BannerData[] }) {
           <CarouselItem key={index}>
             <div className="w-full h-auto !bg-bg max-sm:h-[30vh] relative">
               <Image
-                src={item.images[0]}
+                src={item.image}
                 alt={item.url}
                 width={0}
                 height={0}

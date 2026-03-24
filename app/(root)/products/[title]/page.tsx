@@ -1,13 +1,18 @@
 import dynamic from "next/dynamic";
-const ProductUi = dynamic(()=> import('@/app/ui/product/productDetails/ProductUi'))
+const ProductUi = dynamic(
+  () => import("@/app/ui/product/productDetails/ProductUi"),
+);
 
-
-const page = async ({ params }: { params: { title: string } }) => {
-  const title = params.title;
-  
-  return (
-    <ProductUi title={title}/>
-  )
+interface PageProps {
+  params: Promise<{ title: string }>;
 }
 
-export default page
+const page = async ({ params }: PageProps) => {
+  const { title } = await params;
+
+  const decodedTitle = decodeURIComponent(title);
+
+  return <ProductUi title={decodedTitle} />;
+};
+
+export default page;

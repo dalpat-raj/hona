@@ -30,7 +30,7 @@ const ProductUi = async ({ title }: { title: string }) => {
         </div>
       </div>
       <div>
-        <SimilarProd collection={product.collection} />
+        <SimilarProd collection={product?.collection} />
       </div>
     </div>
   );

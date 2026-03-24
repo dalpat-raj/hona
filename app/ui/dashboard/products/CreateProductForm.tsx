@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa6";
 import AddFeature from "./AddFeature";
 import Input from "../../input/Input";
@@ -8,6 +9,7 @@ import axios from "axios";
 import Image from "next/image";
 import { toast } from "sonner";
 import { ImageItem } from "@/lib/definations";
+import { ImageSkeleton } from "@/app/ui/skeletons";
 
 const CreateProductForm = () => {
   const [addFeature, setAddFeature] = useState<string>("");
@@ -15,18 +17,22 @@ const CreateProductForm = () => {
   const [createProduct, setCreateProduct] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
+  const isUploading = imagesShow?.some((img) => img?.loading);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     modelNumber: "",
+    sku: "",
     stock: 0,
     originalPrice: 0,
     sellingPrice: 0,
     collection: "",
+    color: "",
     dimension: {
       width: 0,
       height: 0,
-      dept: 0,
+      depth: 0,
     },
     feature: [],
     images: [],
@@ -36,19 +42,18 @@ const CreateProductForm = () => {
     const files = e.target.files;
     if (!files) return;
 
-    for (const file of Array.from(files)) {
-      if (!file.type.startsWith("image/")) {
-        toast.error("Only image files allowed");
-        continue;
-      }
+    const filesArray = Array.from(files);
 
-      const preview = URL.createObjectURL(file);
+    const newPreviews = filesArray.map((file) => ({
+      preview: URL.createObjectURL(file),
+      loading: true,
+      url: "",
+    }));
 
-      const tempIndex = imagesShow.length;
+    const startIndex = imagesShow.length;
+    setImagesShow((prev) => [...prev, ...newPreviews]);
 
-      // preview add karo with loading
-      setImagesShow((prev) => [...prev, { preview, loading: true }]);
-
+    filesArray.forEach(async (file, index) => {
       try {
         const formDataData = new FormData();
         formDataData.append("file", file);
@@ -60,20 +65,19 @@ const CreateProductForm = () => {
 
         const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.message);
-        }
+        if (!res.ok) throw new Error(data.error || "Upload failed");
 
-        const imageUrl = data?.url;
+        const imageUrl = data.url;
 
-        // loading false karo
-        setImagesShow((prev) => {
-          const updated = [...prev];
-          updated[tempIndex] = {
-            preview,
-            url: imageUrl,
-            loading: false,
-          };
+        setImagesShow((prevState) => {
+          const updated = [...prevState];
+          if (updated[startIndex + index]) {
+            updated[startIndex + index] = {
+              ...updated[startIndex + index],
+              url: imageUrl,
+              loading: false,
+            };
+          }
           return updated;
         });
 
@@ -82,9 +86,12 @@ const CreateProductForm = () => {
           images: [...prev.images, imageUrl],
         }));
       } catch (error: any) {
-        toast.error(error.message);
+        toast.error(`Upload failed for ${file.name}`);
+        setImagesShow((prev) =>
+          prev.filter((_, i) => i !== startIndex + index),
+        );
       }
-    }
+    });
   };
 
   const handleSubmit: React.MouseEventHandler<HTMLButtonElement> = async (
@@ -97,8 +104,7 @@ const CreateProductForm = () => {
 
       const response = await axios.post("/api/products/addProduct", formData);
       if (response) {
-        // router.push('/dashboard/products')
-        console.log(response);
+        router.push("/dashboard/products");
       } else {
         toast.error("Failed to create product");
       }
@@ -111,6 +117,18 @@ const CreateProductForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleDimensionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      dimension: {
+        ...prev.dimension,
+        [name]: Number(value), // number me convert
+      },
+    }));
   };
 
   const handleColllection = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -177,11 +195,11 @@ const CreateProductForm = () => {
         <div className="col-span-1">
           <Label htmlFor="sku" title="SKU" />
           <Input
-            type="number"
+            type="text"
             name="sku"
             id="sku"
             placeholder="Stock Keeping Unit"
-            value={formData?.modelNumber}
+            value={formData?.sku}
             onChange={handleChange}
           />
         </div>
@@ -240,40 +258,40 @@ const CreateProductForm = () => {
         <div className="col-span-1">
           <Label htmlFor="width" title="Width" />
           <Input
-            type="text"
+            type="number"
             name="width"
             id="width"
             placeholder="width"
-            value={formData?.dimension?.width}
-            onChange={handleChange}
+            value={formData.dimension?.width}
+            onChange={handleDimensionChange}
           />
         </div>
         <div className="col-span-1">
           <Label htmlFor="height" title="Height" />
           <Input
-            type="text"
+            type="number"
             name="height"
-            id="width"
+            id="height"
             placeholder="height"
-            value={formData?.dimension?.height}
-            onChange={handleChange}
+            value={formData.dimension?.height}
+            onChange={handleDimensionChange}
           />
         </div>
         <div className="col-span-1">
-          <Label htmlFor="dept" title="Dept" />
+          <Label htmlFor="depth" title="Depth" />
           <Input
-            type="text"
-            name="dept"
-            id="dept"
-            placeholder="dept"
-            value={formData?.dimension?.dept}
-            onChange={handleChange}
+            type="number"
+            name="depth"
+            id="depth"
+            placeholder="depth"
+            value={formData.dimension?.depth}
+            onChange={handleDimensionChange}
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mt-4">
-        {/* <div>
+        <div>
           <Label htmlFor="color" title="Color" />
           <Input
             type="text"
@@ -281,7 +299,7 @@ const CreateProductForm = () => {
             value={formData?.color}
             onChange={handleChange}
           />
-        </div> */}
+        </div>
         <div className="relative">
           <Label htmlFor="feature" title="Features" />
           <Input
@@ -308,19 +326,19 @@ const CreateProductForm = () => {
         <div className="flex gap-4 flex-wrap mt-4">
           {imagesShow?.map((img, i) => (
             <div key={i} className="relative w-[100px] h-[100px]">
-              {img?.loading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white/70">
-                  <p>Spinner</p>
-                </div>
+              {img.loading ? (
+                // ✅ Skeleton ONLY
+                <ImageSkeleton />
+              ) : (
+                // ✅ Image ONLY
+                <Image
+                  src={img?.preview}
+                  alt="product"
+                  fill
+                  className="object-cover rounded"
+                  unoptimized
+                />
               )}
-
-              <Image
-                src={img?.preview}
-                alt="product"
-                fill
-                className="object-cover rounded"
-                unoptimized
-              />
             </div>
           ))}
         </div>
@@ -339,10 +357,14 @@ const CreateProductForm = () => {
       <div className="mt-4">
         <button
           onClick={handleSubmit}
-          className="w-full bg-green-400 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-          disabled={createProduct}
+          className="w-full bg-green-400 text-white px-4 py-2 rounded-md hover:bg-green-700 transition disabled:opacity-50"
+          disabled={createProduct || isUploading}
         >
-          {createProduct ? "Submitting..." : "Create Product"}
+          {createProduct
+            ? "Submitting..."
+            : isUploading
+              ? "Uploading Images..."
+              : "Create Product"}
         </button>
       </div>
     </div>

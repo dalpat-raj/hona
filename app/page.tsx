@@ -4,7 +4,7 @@ import {
   ProductSliderSkeleton,
   TradingCoverSkeletons,
 } from "@/app/ui/skeletons";
-import Event from "@/app/ui/homePage/event/Event";
+// import Event from "@/app/ui/homePage/event/Event";
 import HomeSlider from "@/app/ui/homePage/HomeSlider";
 const Products = dynamic(() => import("@/app/ui/homePage/ProductsZone"), {
   loading: () => <ProductSliderSkeleton />,

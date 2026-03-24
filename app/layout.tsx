@@ -11,6 +11,10 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { Toaster } from "@/components/ui/sonner";
 // import { currentRole } from '@/lib/data';
 import { poppins } from "@/app/ui/Fonts";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "My Website",
@@ -33,7 +37,7 @@ export default async function RootLayout({
 
   return (
     // <SessionProvider session={session}>
-    <html lang="en" className={poppins.className}>
+    <html lang="en" className={cn(poppins.className, "font-sans", geist.variable)}>
       <body>
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <StoreProvider>

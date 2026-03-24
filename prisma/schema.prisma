@@ -165,14 +165,17 @@ model Product {
   title         String
   description   String
   modelNumber   String
+  sku           String
   stock         Int
   originalPrice Float
   sellingPrice  Float
   collection    String
   color         String
-  model         String[]
   feature       String[]
   images        String[]
+  width         Float
+  height        Float
+  depth         Float
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   review        Review[]
@@ -231,6 +234,6 @@ model Coupon {
 model Banner {
   id        Int      @id @default(autoincrement())
   url       String
-  images    String[]
+  image     String
   createdAt DateTime @default(now())
 }

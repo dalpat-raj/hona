@@ -94,7 +94,7 @@ const Products = () => {
         </div>
       )}
 
-      {!loading && (
+      {!loading && products?.length > 0 && totalPages > 1 && (
         <div className="w-full bg-white py-6">
           <div className="absolute bottom-0 left-[50%] transform -translate-x-1/2">
             <Pagination totalPages={totalPages} />

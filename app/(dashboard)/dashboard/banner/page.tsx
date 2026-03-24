@@ -1,14 +1,17 @@
-import dynamic from 'next/dynamic';
-import LoaderBall from '@/app/ui/loader/BallLoader';
-const Banner = dynamic(()=> import('@/app/ui/dashboard/banner/Banner'), {loading: ()=> <LoaderBall/>})
-import { getBanner } from '@/lib/data';
+import dynamic from "next/dynamic";
+import LoaderBall from "@/app/ui/loader/BallLoader";
+const Banner = dynamic(() => import("@/app/ui/dashboard/banner/Banner"), {
+  loading: () => <LoaderBall />,
+});
+import { getBanner } from "@/lib/data";
 
+const page = async () => {
+  const { data, error } = await getBanner();
 
-const page = async() => {
-  const banners = await getBanner();
-  return (
-    <Banner banners={banners}/>
-  )
-}
+  if (error) {
+    return <div>No Banner Found</div>;
+  }
+  return <Banner banners={data} />;
+};
 
-export default page
+export default page;

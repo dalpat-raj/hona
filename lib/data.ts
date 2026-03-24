@@ -95,12 +95,12 @@ export async function getProducts() {
 
     return { data: products, error: null };
   } catch (error) {
-    console.error("Product fetch error:", error);
     return { data: [], error: "Failed to fetch products" };
   }
 }
 
 export async function getProductDetails(title: string){
+  
   const originalTitle = title.replace(/-/g, ' ');
 
   try {
@@ -151,14 +151,17 @@ export async function editProducts({id,formData}: {id: number, formData: FormDat
         title: formData.title,
         description: formData.description,
         modelNumber: formData.modelNumber,
+        sku: formData.sku,
         stock: formData.stock,
         originalPrice: formData.originalPrice,
         sellingPrice: formData.sellingPrice,
         collection: formData.collection,
-        model: formData.model,
         color: formData.color,
         feature: formData.feature,
-        images: formData.images.map(item=>item.name),
+        images: formData.images?.map(item=>item.name),
+        width: formData.dimension?.width,
+        height: formData.dimension?.height,
+        depth: formData.dimension?.depth,
       },
     });
 
@@ -440,36 +443,34 @@ export async function deactivateCoupons(){
 }
 
 
-export async function getBanner(){
-
-      const banners = await db.banner.findMany({
-        orderBy: {
-          createdAt: 'desc',
-        },
-      })
-
-      if(!banners){
-        throw new Error("no banner founds");
-      }
-
-    return banners ;
-
-  
+export async function getBanner() {
+  try {
+    const banners = await db.banner.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    
+    return {data: banners}; // ✅ always return array
+  } catch (error) {
+   return { data: [], error: "Failed to fetch products" };
+  }
 }
-
 export async function getBannerForHome(){
-      const banners = await db.banner.findMany({
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: 5,
-      })
+  try {
+    const banners = await db.banner.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 5,
+    })
+    return {data: banners}
+    
+  } catch (error) {
+    return { data: [], error: "no banner founds" };
+  }
 
-      if(!banners){
-        throw new Error("no banner founds");
-      }
-
-    return banners ?? null;
+      
   
 }
 

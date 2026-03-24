@@ -131,13 +131,18 @@ export interface FormData {
   description: string;
   modelNumber: string;
   stock: number;
+  sku: string;
   originalPrice: number;
   sellingPrice: number;
   collection: string;
   color: string;
-  model: string[];
   feature: string[];
   images: File[]; 
+  dimension: {
+    width: number;
+    height: number;
+    depth: number;
+  }
 }
 
 export interface Product {
@@ -146,11 +151,11 @@ export interface Product {
   description: string;
   modelNumber: string;
   stock: number;
+  sku: string;
   originalPrice: number;
   sellingPrice: number;
   collection: string;
   color: string;
-  model: string[];
   feature: string[];
   images: string[];
   createdAt: Date; // You might also use Date if you're handling date objects
@@ -185,7 +190,6 @@ export interface CustomFormData {
   sellingPrice: number;
   collection: string;
   color: string;
-  model: string[];
   feature: string[];
   images: File[]; 
 }
@@ -209,11 +213,11 @@ export interface CartItem {
   title: string;
   price: number;
   stock: number;
+  sku: string;
   modelNumber: string;
   image: string; 
   color: string;
   rating: number,
-  model: string | undefined;
   quantity: number;
 }
 
@@ -251,7 +255,6 @@ export interface Items {
   image: string;
   rating: number;
   // color: string;
-  // model: string;
   quantity: number;
   
 }
@@ -286,7 +289,6 @@ export interface UserOrders {
       image: string,
       color: string,
       rating: number,
-      model: string,
       quantity: number,
     }>,
   user: {
@@ -305,7 +307,6 @@ export type OrderSingleItem = {
   color: string,
   id: number,
   image: string,
-  model: string,
   modelNumber: string,
   orderId: number,
   price: number,
@@ -363,7 +364,6 @@ export interface AllEventData {
       sellingPrice: number;
       collection: string;
       color: string;
-      model: string[];
       feature: string[];
       images: string[];
       rating: number;
@@ -393,7 +393,7 @@ export interface AllCouponData {
 export interface BannerData {
   id: number,
   url: string,
-  images: string[],
+  image: string,
 }
 
 

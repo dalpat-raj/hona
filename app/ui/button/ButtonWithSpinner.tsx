@@ -4,6 +4,7 @@ import Spinner from "../loader/RingLoader";
 
 interface ButtonWithSpinnerProps {
   loading: boolean;
+  disabled?: boolean;
   children: React.ReactNode;
 }
 

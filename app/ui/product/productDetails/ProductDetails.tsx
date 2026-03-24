@@ -39,12 +39,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = async ({
         <span className="text-[14px] text-green-400">(Tax included)</span>
       </div>
 
-      {/* <div>
-        <p className="font-extrabold text-[18px] cursor-pointer">
-          <u>Click</u> & get upto 10% off using Perfect cover Rewards
-        </p>
-      </div> */}
-
       <ProductButtons productDetail={productDetail} />
 
       <div className="mt-4">

@@ -2,11 +2,17 @@ import ProductSlider from "@/app/ui/SliderProduct/ProductSlider";
 import { getProducts } from "@/lib/data";
 import Link from "next/link";
 import { caveat } from "@/app/ui/Fonts";
+import { toast } from "sonner";
 
 const Products = async () => {
   const result = await getProducts();
 
   // User friendly error
+
+  // if (result.data.length <= 0) {
+  //   toast.error("Product not available");
+  // }
+
   if (result?.error) {
     return (
       <div className="w-full py-10 text-center">

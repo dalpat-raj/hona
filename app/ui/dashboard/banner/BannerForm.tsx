@@ -1,53 +1,57 @@
 import { createBanner } from "@/action/banner";
 import Label from "../../label/Label";
 import { useState } from "react";
-import { UploadDropzone } from "@/lib/uploadthing";
 import Image from "next/image";
 import { RxCross1 } from "react-icons/rx";
 import { caveat } from "@/app/ui/Fonts";
 import { toast } from "sonner";
 import { ImageSkeleton } from "@/app/ui/skeletons";
 import ButtonWithSpinner from "@/app/ui/button/ButtonWithSpinner";
-import ImageUploader from "@/components/ui/imageUploader";
 
 type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+type ImageItem = {
+  preview: string;
+  url?: string;
+  loading: boolean;
+};
 
 export function BannerForm({ setOpen }: Props) {
   const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState<string[]>([]);
-  const [imageUploading, setImageUploading] = useState(false);
+  const [image, setImage] = useState<ImageItem | null>(null);
+  const isUploading = image?.loading;
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    if (!files.length) return;
-
-    setImageUploading(true);
+    // ✅ preview + skeleton
+    const preview = URL.createObjectURL(file);
+    setImage({ preview, loading: true });
 
     try {
-      const uploadedUrls: string[] = [];
+      const formData = new FormData();
+      formData.append("file", file);
 
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append("file", file);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
+      const data = await res.json();
 
-        const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
 
-        uploadedUrls.push(data.url);
-      }
-
-      setImages(uploadedUrls);
+      // ✅ image replace
+      setImage({
+        preview,
+        url: data.url,
+        loading: false,
+      });
     } catch (error) {
       toast.error("Image upload failed");
-    } finally {
-      setImageUploading(false);
+      setImage(null);
     }
   };
 
@@ -56,7 +60,11 @@ export function BannerForm({ setOpen }: Props) {
     setLoading(true);
     const formData = new FormData(event.currentTarget);
     try {
-      const bannerAddAction = createBanner.bind(null, images);
+      if (!image?.url) {
+        toast.error("Please upload image");
+        return;
+      }
+      const bannerAddAction = createBanner.bind(null, image.url);
       const data = await bannerAddAction(formData);
       if (data?.success) toast.success(data.success);
       if (data?.error) toast.error(data.error);
@@ -70,7 +78,7 @@ export function BannerForm({ setOpen }: Props) {
   };
 
   const handleChange = () => {
-    setImages([]);
+    // setImages([]);
   };
 
   return (
@@ -100,46 +108,39 @@ export function BannerForm({ setOpen }: Props) {
           </div>
 
           <div className="my-4 w-full h-[270px] rounded-md border border-dashed border-green-300 flex justify-center items-center relative">
-            {images?.length >= 1 ? (
-              <div className="">
+            {image ? (
+              <div className="w-full h-full relative">
+                {/* Change Button */}
                 <button
-                  onClick={handleChange}
+                  onClick={() => setImage(null)}
                   className="rounded-lg bg-green-700 text-white text-[14px] px-2 py-1 absolute right-[5px] top-[5px] z-10"
                 >
                   Change
                 </button>
-                <div className="">
-                  {images?.map((img, i) => (
-                    <div className="w-full h-full rounded-sm" key={i}>
-                      {imageUploading && <ImageSkeleton />}
-                      <Image
-                        src={img}
-                        alt={img}
-                        fill
-                        style={{
-                          borderRadius: "10px",
-                          padding: "5px",
-                        }}
-                        onLoad={() => setImageUploading(false)}
-                      />
-                    </div>
-                  ))}
-                </div>
+
+                {/* Skeleton OR Image */}
+                {image.loading ? (
+                  <ImageSkeleton />
+                ) : (
+                  <Image
+                    src={image.url!}
+                    alt="banner"
+                    fill
+                    className="object-cover rounded-md p-1"
+                  />
+                )}
               </div>
             ) : (
-              <div className="">
-                <ImageUploader
-                  images={images}
-                  setImages={setImages}
-                  setUploading={setImageUploading}
-                />
-              </div>
+              <input type="file" onChange={uploadImage} />
             )}
           </div>
 
           <div className="w-full h-8">
-            <ButtonWithSpinner loading={loading}>
-              Create Banner
+            <ButtonWithSpinner
+              loading={loading}
+              disabled={loading || isUploading}
+            >
+              {isUploading ? "Uploading..." : "Create Banner"}
             </ButtonWithSpinner>
           </div>
         </form>

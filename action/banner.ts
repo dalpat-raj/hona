@@ -5,31 +5,27 @@ import { revalidatePath } from 'next/cache';
 import { UserRole } from "@prisma/client";
 
 
-export async function createBanner(images: string[] | any ,formData: FormData) {
-    const url = formData.get('url') as string;
-    // const role = await currentRole();
-    try {
-        // if (role !== UserRole.ADMIN) {
-        //     return {error: "User not verify!"}
-        // }
-        
-        if(!url || !images){
-            return({error: 'All fields are required!'})
-        }
+export async function createBanner(image: string, formData: FormData) {
+  const url = formData.get("url") as string;
 
-        await db.banner.create({
-            data: {
-                url: url,
-                images: images
-            },
-        });
-        revalidatePath("/dashboard/banner")
-        return {success: "Banner Created ✅"}; 
-    } catch (error) {
-        return({error: "Database Error failed to create coupon ❌"});
+  try {
+    if (!url || !image) {
+      return { error: "All fields are required!" };
     }
-}
 
+    await db.banner.create({
+      data: {
+        url,
+        image, // ✅ single string
+      },
+    });
+
+    revalidatePath("/dashboard/banner")
+        return {success: "Banner Created ✅"}; 
+  } catch (error) {
+     return({error: "Database Error failed to create coupon ❌"});
+  }
+}
 
 export async function EditBanner(id:number, images: string[] | any ,formData: FormData) {
     const url = formData.get('url') as string;
@@ -44,7 +40,7 @@ export async function EditBanner(id:number, images: string[] | any ,formData: Fo
             where:{id: Number(id)},
             data: {
                 url: url,
-                images: images
+                image: images
             },
         });
         revalidatePath("/dashboard/banner")

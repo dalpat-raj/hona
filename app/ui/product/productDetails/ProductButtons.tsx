@@ -14,9 +14,7 @@ type Props = {
 const ProductButtons: React.FC<Props> = ({ productDetail }) => {
   const [loading, setLoading] = useState(false);
   const [qty, setQty] = useState<number>(1);
-  const [modell, setModel] = useState<string | undefined>(
-    productDetail?.model[0],
-  );
+  console.log("productDetail", productDetail);
 
   const dispatch = useAppDispatch();
 
@@ -34,11 +32,11 @@ const ProductButtons: React.FC<Props> = ({ productDetail }) => {
       title: productDetail.title,
       price: productDetail.sellingPrice,
       stock: productDetail.stock,
+      sku: productDetail.sku,
       modelNumber: productDetail.modelNumber,
       image: productDetail.images[0],
       color: productDetail.color,
       rating: productDetail?.rating || 0,
-      model: productDetail.model[0],
       quantity: qty,
     };
     dispatch(addToCart(cartItem));
@@ -47,24 +45,6 @@ const ProductButtons: React.FC<Props> = ({ productDetail }) => {
 
   return (
     <div>
-      <div className="my-4">
-        {productDetail?.model?.length >= 2 && (
-          <>
-            <p className="text-[11px] font-bold">SELECT MODEL</p>
-            <select
-              onChange={(e) => setModel(e.target.value)}
-              className="mt-2 w-36 border border-green-300 py-1 text-green-700 bg-white outline-none"
-            >
-              {productDetail?.model?.map((item, i) => (
-                <option key={i} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
-      </div>
-
       <div className="my-4">
         <p className="text-[11px] font-bold">QUANTITY</p>
         <div className="mt-2 h-8 w-36 border border-green-300 bg-white grid grid-cols-4 items-center">
