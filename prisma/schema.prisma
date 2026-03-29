@@ -14,53 +14,15 @@ enum UserRole {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  role          UserRole        @default(USER)
-  address       Address?        @relation(fields: [addressId], references: [id])
-  addressId     Int?            @unique
-  orders        Order[]
-  reviews       Review[]
-  Authenticator Authenticator[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-}
-
-model Account {
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([provider, providerAccountId])
-}
-
-model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  phone     String    @unique
+  name      String?
+  email     String?
+  role      UserRole  @default(USER)
+  address   Address[]
+  orders    Order[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 // remove it later be careful
@@ -82,63 +44,36 @@ model PasswordResetToken {
   @@unique([email, token])
 }
 
-// Optional for WebAuthn support
-model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId, credentialID])
-}
-
 model Address {
-  id              Int     @id @default(autoincrement())
-  completeAddress String
-  nearbyLandmark  String?
-  phone           String
-  city            String
-  state           String
-  pinCode         String?
-  user            User?
-  userId          String? @unique // Allows only one address per user
+  id      String @id @default(cuid())
+  userId  String
+  name    String
+  phone   String
+  pincode String
+  city    String
+  state   String
+  address String
+  user    User   @relation(fields: [userId], references: [id])
 }
 
 model Order {
-  id             Int             @id @default(autoincrement())
-  items          OrderItem[]
-  subTotal       Float?
-  shippingCharge Float?
-  totalAmount    Float
-  discountPrice  Float?
-  status         String          @default("Order Confirmed")
-  statusHistory  StatusHistory[]
-  paymentInfo    PaymentInfo?    @relation(fields: [paymentInfoId], references: [id])
-  paymentInfoId  Int?            @unique
-  userId         String?
-  user           User?           @relation(fields: [userId], references: [id])
-  createdAt      DateTime        @default(now())
-  deliverAt      DateTime        @default(now())
-}
-
-model StatusHistory {
-  id        Int      @id @default(autoincrement())
-  orderId   Int
-  status    String
-  changedAt DateTime @default(now())
-
-  order Order @relation(fields: [orderId], references: [id])
+  id           String        @id @default(cuid())
+  userId       String
+  total        Float
+  status       String // PENDING, SHIPPED, DELIVERED
+  paymentType  String // COD / PREPAID
+  shiprocketId String?
+  trackingId   String?
+  items        OrderItem[]
+  addressId    String
+  createdAt    DateTime      @default(now())
+  user         User          @relation(fields: [userId], references: [id])
+  paymentInfos PaymentInfo[]
 }
 
 model OrderItem {
   id          Int    @id @default(autoincrement())
-  orderId     Int
+  orderId     String
   productId   Int
   title       String
   price       Float
@@ -154,10 +89,11 @@ model OrderItem {
 }
 
 model PaymentInfo {
-  id     Int    @id @default(autoincrement())
-  type   String
-  status String
-  order  Order?
+  id      Int     @id @default(autoincrement())
+  type    String
+  status  String
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String?
 }
 
 model Product {
@@ -211,7 +147,6 @@ model Review {
   productId Int
   rating    Float
   product   Product? @relation(fields: [productId], references: [id])
-  user      User?    @relation(fields: [email], references: [email])
   createdAt DateTime @default(now())
 }
 
