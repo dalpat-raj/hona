@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  phone     String    @unique
+  name      String?
+  email     String?
+  role      UserRole  @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  address   Address[]
+  orders    Order[]
+}
+
+model Address {
+  id      String  @id @default(cuid())
+  userId  String
+  name    String
+  phone   String
+  pincode String
+  city    String
+  state   String
+  address String
+  user    User    @relation(fields: [userId], references: [id])
+  orders  Order[]
+}
+
+model Order {
+  id           String        @id @default(cuid())
+  userId       String
+  addressId    String
+  total        Float
+  status       OrderStatus   @default(PENDING)
+  paymentType  PaymentType
+  shiprocketId String?
+  trackingId   String?
+  createdAt    DateTime      @default(now())
+  address      Address       @relation(fields: [addressId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+  items        OrderItem[]
+  paymentInfos PaymentInfo[]
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  productId   String
+  variantId   String?
+  title       String
+  price       Float
+  quantity    Int
+  color       String?
+  modelNumber String?
+  image       String?
+  order       Order   @relation(fields: [orderId], references: [id])
+}
+
+model PaymentInfo {
+  id      String  @id @default(cuid())
+  type    String
+  status  String
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id])
+}
+
+model Product {
+  id            String         @id @default(cuid())
+  title         String
+  description   String?
+  collection    String?
+  brand         String?
+  ratings       Float          @default(0)
+  feature       String[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  eventProducts EventProduct[]
+  reviews       Review[]
+  variants      Variant[]
+}
+
+model Variant {
+  id            String         @id @default(cuid())
+  sku           String         @unique
+  modelNumber   String?
+  capacity      String?
+  power         String?
+  color         String?
+  originalPrice Float
+  sellingPrice  Float
+  stock         Int
+  length        Float?
+  breadth       Float?
+  height        Float?
+  weight        Float?
+  productId     String
+  createdAt     DateTime       @default(now())
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  images        VariantImage[]
+}
+
+model VariantImage {
+  id        String  @id @default(cuid())
+  url       String
+  variantId String
+  variant   Variant @relation(fields: [variantId], references: [id])
+}
+
+model Event {
+  id          String         @id @default(cuid())
+  title       String
+  description String
+  discount    Float
+  endDate     DateTime
+  createdAt   DateTime       @default(now())
+  products    EventProduct[]
+}
+
+model EventProduct {
+  id        String  @id @default(cuid())
+  eventId   String
+  productId String
+  event     Event   @relation(fields: [eventId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  images    String[]
+  rating    Float
+  productId String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Collection {
+  id     String  @id @default(cuid())
+  title  String
+  image  String?
+  fileId String?
+}
+
+model Brand {
+  id     String  @id @default(cuid())
+  title  String
+  image  String?
+  fileId String?
+}
+
+model Coupon {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  discount       Float
+  isActive       Boolean  @default(true)
+  expirationDate DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  url       String
+  image     String
+  fileId    String
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentType {
+  COD
+  PREPAID
+}
