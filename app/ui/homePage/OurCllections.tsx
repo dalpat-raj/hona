@@ -17,14 +17,14 @@ const OurCollection = () => {
   ];
   return (
     <div className="w-full relative py-8  max-sm:py-6 px-12 max-md:px-4 max-sm:px-2  bg-cover bg-center">
-      <div className="flex justify-between items-center gap-2">
+      <div className="flex justify-between items-center gap-2 overflow-x-scroll no-scrollbar">
         {partners.map((item) => (
           <Link
             href={`/products?collection=${item.collection}`}
             key={item.collection}
           >
             <div className="flex flex-col items-center gap-2 cursor-pointer">
-              <div className="w-[100px] h-[100px] p-2 bg-white rounded-full flex justify-center items-center overflow-hidden">
+              <div className="w-[100px] h-[100px] max-sm:w-[80px] max-sm:h-[80px] p-2 bg-white rounded-full flex justify-center items-center overflow-hidden">
                 <Image
                   src={item.img}
                   alt={item.collection}

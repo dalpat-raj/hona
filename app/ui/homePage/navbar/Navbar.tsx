@@ -19,7 +19,7 @@ const Navbar = async (props: Props) => {
           <MobileMenu />
         </div>
         <div className="flex justify-between items-center gap-8 max-sm:gap-0">
-          <div className="w-[140px] max-sm:w-[100px]">
+          <div className="w-[160px] max-sm:w-[140px]">
             <Link href="/">
               <Image
                 src={logo}

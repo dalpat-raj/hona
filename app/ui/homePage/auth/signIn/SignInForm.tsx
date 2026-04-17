@@ -20,7 +20,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import LoaderBall from "@/app/ui/loader/BallLoader";
 import Spinner from "@/app/ui/loader/RingLoader";
 
 export default function SignInForm() {
@@ -56,18 +55,12 @@ export default function SignInForm() {
     }
 
     const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-      size: "normal",
+      size: "invisible",
     });
 
     (window as any).recaptchaVerifier = verifier;
     setRecaptchVerifier(verifier);
   }, []);
-
-  useEffect(() => {
-    if (otp.length === 6 && !isVerifying) {
-      verifyOtp();
-    }
-  }, [otp, isVerifying]);
 
   const verifyOtp = async () => {
     if (isVerifying) return;
@@ -91,6 +84,7 @@ export default function SignInForm() {
         });
         toast.success("Login successful 🎉");
         router.back();
+        router.refresh();
       } catch (err) {
         setError("OTP failed");
       } finally {
@@ -112,19 +106,10 @@ export default function SignInForm() {
       }
 
       try {
-        // ✅ IMPORTANT: reset recaptcha before reuse
-        recaptchaVerifier.clear();
-
-        const newVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-          size: "normal",
-        });
-
-        setRecaptchVerifier(newVerifier);
-
         const confirmationResult = await signInWithPhoneNumber(
           auth,
           phoneNumber,
-          newVerifier, // 👈 use new one
+          recaptchaVerifier,
         );
 
         setConfirmationResult(confirmationResult);
@@ -137,24 +122,24 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="max-w-sm mx-auto">
+    <div className="max-w-sm mx-auto ">
       <div className="text-center">
         <h1 className="text-[20px] font-bold text-blue">Sign In</h1>
         <h2 className=" mt-2 text-[17px] font-semibold text-blue">
           Enter Mobile Number
         </h2>
-        <p className="my-2 text-[14px] text-gray-500 text-wrap">
+        <p className="my-1 text-[14px] text-gray-500 text-wrap max-sm:mb-6">
           We will send you an OTP to verify your number
         </p>
       </div>
       {!confirmationResult && (
         <form onSubmit={requestOtp}>
           <div className="flex gap-2">
-            <div className="flex items-center px-3 border rounded-md bg-gray-100 text-sm">
+            <div className="flex items-center px-3 border bg-white rounded-md bg-gray-100 text-sm">
               +91
             </div>
             <Input
-              className="text-black"
+              className="text-black bg-white"
               type="tel"
               name="phone"
               maxLength={10}
@@ -168,7 +153,7 @@ export default function SignInForm() {
               placeholder="Enter mobile number"
             />
           </div>
-          <p className="text-xs text-gray-400 my-2">
+          <p className="text-xs text-gray-400 my-2 ">
             Please enter your number wit the country code (i.e. +91 for IN)
           </p>
         </form>
@@ -193,46 +178,56 @@ export default function SignInForm() {
               <InputOTPSlot index={5} />
             </InputOTPGroup>
           </InputOTP>
-
-          {/* ✅ VERIFY BUTTON HERE */}
-          <Button
-            disabled={otp.length !== 6 || isVerifying}
-            onClick={verifyOtp}
-            className="w-full"
-          >
-            {isVerifying ? "Verifying..." : "Verify OTP"}
-          </Button>
         </div>
       )}
 
-      <div className="flex justify-start items-center gap-2 py-4">
-        <input type="checkbox" className="" />
+      <div className="flex justify-start items-center gap-4 max-sm:gap-6 py-4">
+        <input type="checkbox" className="scale-150" />
         <p className="text-[13px]">
-          By continuing you agree that. you have read and accupt
-          <br />
-          Shiprocket's T&C and Privacy Policy.{" "}
+          By continuing you agree that. you have read and accupt Shiprocket's T&C and Privacy Policy.
         </p>
       </div>
       <Button
         disabled={
           isPending ||
           isVerifying ||
-          (!confirmationResult && resendCountDown > 0)
+          (!confirmationResult && resendCountDown > 0) ||
+          (confirmationResult && otp.length !== 6)
         }
-        onClick={() => requestOtp()}
+        onClick={() => {
+          if (confirmationResult) {
+            verifyOtp();
+          } else {
+            requestOtp();
+          }
+        }}
         className="mt-5 w-full py-4 rounded-lg text-white font-semibold
-        bg-gradient-to-r from-[#34d399] via-[#1db39f] to-[#0ea5a4]
-        shadow-[0_10px_25px_rgba(29,179,159,0.4)]
-        backdrop-blur-md text-[15px] max-sm:py-6
-        hover:scale-[1.03] hover:shadow-[0_15px_35px_rgba(29,179,159,0.6)]
-        transition-all duration-300"
+  bg-gradient-to-r from-[#34d399] via-[#1db39f] to-[#0ea5a4]
+  backdrop-blur-md text-[15px] max-sm:py-6"
       >
-        {resendCountDown > 0
-          ? `Resend OTP in ${resendCountDown}`
+        {isVerifying
+          ? "Verifying..."
           : isPending
-            ? "Sending OTP"
-            : "Send OTP"}
+            ? "Sending OTP..."
+            : confirmationResult
+              ? "Verify OTP"
+              : "Send OTP"}
       </Button>
+
+      {confirmationResult && (
+        <p className="text-center text-sm text-gray-500 mt-2">
+          {resendCountDown > 0 ? (
+            <>Resend OTP in {resendCountDown}s</>
+          ) : (
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => requestOtp()}
+            >
+              Resend OTP
+            </span>
+          )}
+        </p>
+      )}
 
       <div className="p-10 text-center">
         {error && <p className="text-red-500">{error}</p>}

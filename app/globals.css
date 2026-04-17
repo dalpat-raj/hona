@@ -161,6 +161,62 @@ input[type='number']::-webkit-outer-spin-button {
   animation: extraadd 0.5s ease-in alternate;
 }
 
+.privacy-policy [data-custom-class='body'],
+.privacy-policy [data-custom-class='body'] * {
+  background: transparent !important;
+}
+
+/* Title */
+.privacy-policy [data-custom-class='title'],
+.privacy-policy [data-custom-class='title'] * {
+  font-family: Arial !important;
+  font-size: 26px !important;
+  color: #061635 !important;
+}
+
+/* Subtitle */
+.privacy-policy [data-custom-class='subtitle'],
+.privacy-policy [data-custom-class='subtitle'] * {
+  font-family: Arial !important;
+  font-size: 14px !important;
+  color: #595959 !important;
+}
+
+/* Heading 1 */
+.privacy-policy [data-custom-class='heading_1'],
+.privacy-policy [data-custom-class='heading_1'] * {
+  font-family: Arial !important;
+  font-size: 19px !important;
+  color: #061635 !important;
+}
+
+/* Heading 2 */
+.privacy-policy [data-custom-class='heading_2'],
+.privacy-policy [data-custom-class='heading_2'] * {
+  font-family: Arial !important;
+  font-size: 17px !important;
+  color: #061635 !important;
+}
+
+/* Body Text */
+.privacy-policy [data-custom-class='body_text'],
+.privacy-policy [data-custom-class='body_text'] * {
+  font-family: Arial !important;
+  font-size: 14px !important;
+  color: #595959 !important;
+}
+
+/* Links */
+.privacy-policy [data-custom-class='link'],
+.privacy-policy [data-custom-class='link'] * {
+  font-family: Arial !important;
+  font-size: 14px !important;
+  color: #3030f1 !important;
+  word-break: break-word !important;
+}
+
+
+
 @layer base {
   :root {
     --radius: 0.5rem;
@@ -168,7 +224,7 @@ input[type='number']::-webkit-outer-spin-button {
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
+    --popover: #FFF;
     --popover-foreground: 224 71.4% 4.1%;
     --primary: 220.9 39.3% 11%;
     --primary-foreground: 210 20% 98%;

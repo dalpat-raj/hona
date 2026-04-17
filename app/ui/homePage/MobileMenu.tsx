@@ -13,12 +13,12 @@ const MobileMenu = () => {
         {
             open ? (
                 <RxCross2
-                size={25}
+                size={21}
                 onClick={()=>setOpen(!open)}
                 />
             ) : (
                 <AiOutlineMenu 
-                size={25}
+                size={21}
                 onClick={()=>setOpen(!open)}
                 />
             )

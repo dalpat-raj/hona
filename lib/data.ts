@@ -23,21 +23,26 @@ export const getUserById = async (id: string | undefined) => {
   }
 };
 
+export async function logoutUser() {
+  try {
+    const res = await fetch("/api/logout", {
+      method: "POST",
+    });
 
-// export const getCurrentUser = async () => {
-//   const session = await auth();
-//   const email = session?.user.email
-//   const user = await db.user.findFirst({
-//       where: {
-//         email: email
-//       },
-//       include: {
-//         address: true,
-//       }
-//     })
+    const data = await res.json();
 
-//   return user;
-// }
+    if (!res.ok) {
+      throw new Error(data?.message || "Logout failed");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Logout error:", error);
+    throw error;
+  }
+}
+
+
 // export const getCurrentUserReviews = async () => {
 //   const session = await auth();
 //   const email = session?.user.email

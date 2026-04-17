@@ -20,13 +20,19 @@ const Menu = () => {
           </li>
         </div>
         <div className="flex justify-between items-center py-4 max-md:px-4">
-          <li className={"mr-10  transition-all ease-out hover:scale-110"}>Order</li>
+          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+          <Link href="/pages/about-us">About Us</Link>  
+          </li>
         </div>
         <div className="flex justify-between items-center py-4 max-md:px-4">
-          <li className={"mr-10 transition-all ease-out hover:scale-110"}>About Us</li>
+          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+          <Link href="/pages/contact-us">Contact Us</Link>  
+          </li>
         </div>
         <div className="flex justify-between items-center py-4 max-md:px-4">
-          <li className={"mr-10 transition-all ease-out hover:scale-110"}>Contact</li>
+          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+            <Link href="/pages/blog">blog</Link>  
+          </li>
         </div>
 
         {/* Social Links  */}

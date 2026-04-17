@@ -14,8 +14,67 @@ import Script from "next/script";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "My Website",
-  description: "My Ecommerce Website",
+  title: {
+    default: "Contrive - Buy Refrigerators, Washing Machines & Mixers Online",
+    template: "%s | Contrive",
+  },
+
+  description:
+    "Shop refrigerators, washing machines, and mixers at best prices in India. Fast delivery, secure checkout, and trusted service at Contrive.",
+
+  keywords: [
+    "washing machine online",
+    "buy refrigerator India",
+    "mixer grinder online",
+    "home appliances India",
+    "electronics store India",
+    "Contrive store",
+  ],
+
+  authors: [{ name: "Contrive" }],
+  creator: "Contrive",
+  publisher: "Contrive",
+
+  metadataBase: new URL("https://www.thecontrive.com"),
+
+  alternates: {
+    canonical: "/",
+  },
+
+  openGraph: {
+    title: "Contrive - Home Appliances Store",
+    description:
+      "Buy washing refrigerators, machines, and mixers online at the best prices.",
+    url: "https://www.thecontrive.com",
+    siteName: "Contrive",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Contrive Store",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Contrive - Home Appliances Store",
+    description: "Best deals on washing machines, refrigerators & mixers.",
+    images: ["/bg.jpg"],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+  },
+
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default async function RootLayout({
@@ -24,23 +83,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const user = await getCurrentUser();
-  const role = user?.role;  
-  
+  const role = user?.role;
+
   return (
     <html
       lang="en"
       className={cn(poppins.className, "font-sans", geist.variable)}
     >
       <body>
-
         <StoreProvider>
           <Toaster position="top-right" />
           {role !== "ADMIN" && <Navbar />}
-          {/* {isSlow && (
-            <div className="fixed top-0 w-full bg-red-500 text-white text-center py-2 z-50">
-              ⚠️ Your internet connection is slow
-            </div>
-          )} */}
+
           {children}
           {role !== "ADMIN" && <Footer />}
         </StoreProvider>
@@ -48,6 +102,17 @@ export default async function RootLayout({
         src="https://checkout.shiprocket.in/checkout.js" 
         strategy="lazyOnload"
         /> */}
+        <Script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Contrive",
+              url: "https://www.thecontrive.com",
+            }),
+          }}
+        />
       </body>
     </html>
   );

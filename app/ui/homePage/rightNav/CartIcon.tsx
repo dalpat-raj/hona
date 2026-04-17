@@ -34,7 +34,7 @@ const CartIcon = (props: Props) => {
         className="relative cursor-pointer transition-all ease-out hover:scale-110 max-md:hover:scale-100"
         onClick={() => setOpenCart(true)}
       >
-        <MdOutlineShoppingCart size={23} />
+        <MdOutlineShoppingCart size={21} color="text-blue" />
         <p className="w-5 h-5 absolute -top-2/3 -right-2 bg-bga text-blue text-sm flex items-center justify-center rounded-full">
           {cartCount}
         </p>

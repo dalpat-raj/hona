@@ -9,45 +9,59 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
+import logo from "../../../public/logo.png"
 
 const Footer = () => {
   return (
     <div className="w-full px-24 max-lg:px-12 max-md:px-4 max-sm:px-2 bg-bga border-t-green-200">
       <div className="py-12 max-sm:py-4 grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-8 text-green-600 max-sm:hidden">
         <div>
-          <h2 className="text-blue text-[17px] font-semibold pb-2">Company</h2>
-          <ul className="text-[14px] font-semibold">
+          <div className="w-[180px] max-sm:w-[140px] ">
+            <Link href="/">
+              <Image
+                src={logo}
+                alt="logo"
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </Link>
+          </div>
+          <ul className="text-[14px] font-semibold mt-6">
             <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
               <Link href={"/"}>Our Story</Link>
             </li>
             <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
               <Link href={"/"}>Our Blog</Link>
             </li>
-            <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
-              <Link href={"/"}>Privacy Policy</Link>
-            </li>
-            <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
-              <Link href={"/"}>Terms Of Service</Link>
-            </li>
           </ul>
         </div>
 
         <div>
-          <h2 className="text-blue text-[17px] pb-2 font-semibold ">Need Help ?</h2>
+          <h2 className="text-blue text-[17px] pb-2 font-semibold ">Quick Links</h2>
           <ul>
             <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
-              <Link href={"/"}>Track Order</Link>
+              <Link href={"/pages/about-us"}>About Us</Link>
             </li>
             <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
-              <Link href="/">Cancellation</Link>
+              <Link href="/pages/privacy-policy">Privacy Policy</Link>
             </li>
             <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
-              <Link href={"/"}>Refund & Exchange Policy</Link>
+              <Link href={"/pages/refund-policy"}>Refund & Exchange Policy</Link>
             </li>
             <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
-              <Link href="/">
-                Shipping Information
-              </Link>
+              <Link href="/pages/shipping-policy">Shipping Policy</Link>
+            </li>
+            <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
+              <Link href="/pages/cookie-policy">Cookie Policy</Link>
+            </li>
+            <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
+              <Link href="/pages/terms-condition">Terms & Condition</Link>
+            </li>
+            <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
+              <Link href="/pages/contact-us">Contact Us</Link>
             </li>
           </ul>
         </div>
@@ -102,19 +116,23 @@ const Footer = () => {
             <AccordionContent>
               <div className="py-4 transition duration-500 ease-in opacity-100">
                 <ul className="text-[14px] font-semibold">
-                  <li className="list-none py-1 text-[14px] font-normal text-black">
-                    <Link href={"/"}>Our Story</Link>
+                            <li className="w-[180px] max-sm:w-[140px] ">
+            <Link href="/">
+              <Image
+                src={logo}
+                alt="logo"
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </Link>
+          </li>
+                  <li className="list-none py-1 text-[14px] no-underline font-normal text-black">
+                    <Link href={"/pages/ourStory"}>Our Story</Link>
                   </li>
                   <li className="list-none py-1 text-[14px] font-normal text-black">
-                    <Link href={"/"}>Our Blog</Link>
-                  </li>
-                  <li className="list-none py-1 text-[14px] font-normal text-black">
-                    <Link href={"/"}>Privacy Policy</Link>
-                  </li>
-                  <li className="list-none py-1 text-[14px] font-normal text-black">
-                    <Link href={"/"}>
-                      Terms Of Service
-                    </Link>
+                    <Link href={"/pages/blog"}>Our Blog</Link>
                   </li>
                 </ul>
               </div>

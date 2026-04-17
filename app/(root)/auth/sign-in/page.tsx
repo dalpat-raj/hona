@@ -5,8 +5,8 @@ import logo from "../../../../public/logo.png"
 
 const SignIn = () => {
   return (
-    <div className="w-full h-full flex justify-center items-center py-6 bg-bga">
-      <div className="w-8/12 max-lg:w-12/12 max-sm:w-full h-auto p-4 max-sm:px-0 grid grid-cols-2 items-center gap-2">
+    <div className="w-full h-full flex justify-center items-center py-6 max-sm:py-0 bg-bga">
+      <div className="w-8/12 max-lg:w-12/12 max-sm:w-full h-auto p-4 max-sm:p-0 max-sm:px-0 grid grid-cols-2 items-center gap-2">
         <section className=" col-span-1 my-4 text-center grid grid-cols-12 gap-2 items-center max-sm:hidden">
           <div className="">
             <div className="w-[100px] max-sm:w-[70px] mb-4">
@@ -35,7 +35,7 @@ const SignIn = () => {
           </div>
         </section>
 
-        <section className="col-span-1 max-sm:col-span-2 shadow-custom-shadow rounded-md bg-white py-4 px-3">
+        <section className="col-span-1 max-sm:col-span-2 shadow-custom-shadow max-sm:shadow-none rounded-md bg-white py-4 max-sm:pt-8 px-3">
           <SignInForm />
         </section>
       </div>

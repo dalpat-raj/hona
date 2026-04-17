@@ -51,7 +51,7 @@ const SearchIcon = () => {
         className="cursor-pointer text-blue font-bold transition-all ease-out hover:scale-110 max-md:hover:scale-100"
         onClick={() => setOpenSearch(!openSearch)}
       >
-        <IoSearch size={25} />
+        <IoSearch size={21} color="text-blue" />
       </div>
 
       <div
