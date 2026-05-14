@@ -29,11 +29,11 @@ export const userProfileOption = [
       icon: IoLocationOutline,
       url: "/profile/address"
   },
-  // {
-  //     title: "My Rating & Review",
-  //     icon: FaRegStar,
-  //     url: "/profile/reviews"
-  // },
+  {
+      title: "My Rating & Review",
+      icon: FaRegStar,
+      url: "/profile/reviews"
+  },
   // {
   //     title: "My Coupon",
   //     icon: IoLocationOutline,
@@ -82,11 +82,11 @@ export const sideNavData = [
       icon: HiOutlineDuplicate,
       url: "/dashboard/brand"
     },
-    // {
-    //   title: "Reviews",
-    //   icon: IoIosStarHalf,
-    //   url: "/dashboard/reviews"
-    // },
+    {
+      title: "Reviews",
+      icon: IoIosStarHalf,
+      url: "/dashboard/reviews"
+    },
     // {
     //   title: "Customers",
     //   icon: TbUsers,

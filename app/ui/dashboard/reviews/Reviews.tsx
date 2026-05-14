@@ -5,7 +5,7 @@ const ReviewsUi = async() => {
     const Allreviews = await getReviews()
     
     return (
-        <div className='p-4 mt-4'>
+        <div className='p-4 mt-4 bg-white'>
             {
                 Allreviews?.map((item,i)=>(
                     <div key={i}>

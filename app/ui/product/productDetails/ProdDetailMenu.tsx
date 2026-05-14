@@ -1,6 +1,6 @@
 import React from "react";
 import ProductReview from "@/app/ui/product/productDetails/ProductReview";
-import { Product, SessionUser } from "@/lib/definations";
+import { Product } from "@/lib/definations";
 import Rating from "@/app/ui/rating/Rating";
 import {
   Accordion,
@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/accordion";
 
 interface ProductDetailsProps {
-  user: SessionUser | undefined;
+  user: any;
   product: Product;
 }
 
-const ProdDetailMenu: React.FC<ProductDetailsProps> = ({ user, product }) => {
+const ProdDetailMenu: React.FC<ProductDetailsProps> = ({user,product }) => {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
@@ -49,7 +49,7 @@ const ProdDetailMenu: React.FC<ProductDetailsProps> = ({ user, product }) => {
           <h6 className="text-[13px] text-green-900 uppercase font-extrabold text-left">
             Reviews{" "}
             <span>
-              <Rating rating={4} />
+              <Rating rating={product?.ratings} />
             </span>
           </h6>
         </AccordionTrigger>

@@ -28,8 +28,8 @@ const ReviewsCard = ({reviews}: {reviews: Review}) => {
   return (
     <div className='mb-6 border-b border-gray-200 pb-4'>
         <div className='flex justify-between'>
-            <div className='flex justify-start items-center bg-gray-200 w-max pr-6 rounded-lg gap-1'>
-                <div className='w-6 h-6 rounded-full bg-green-500 flex justify-center items-center p-1 text-[16px] text-white font-bold'>{reviews.name.slice(0, 1)}</div>
+            <div className='flex justify-start items-center bg-gray w-max px-2 rounded-lg gap-1'>
+                <div className='w-6 h-6 rounded-full bg-bgg flex justify-center items-center p-1 text-[16px] text-white font-bold'>{reviews.name.slice(0, 1)}</div>
                 <p className='text-[14px]'>{reviews.name}</p>
             </div>
 

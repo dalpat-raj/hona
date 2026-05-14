@@ -39,10 +39,16 @@ const ProductButtons: React.FC<Props> = ({
       price: selectedVariant.sellingPrice,
       stock: selectedVariant.stock,
       sku: selectedVariant.sku,
+      power: selectedVariant.power,
+      capacity: selectedVariant.capacity,
       modelNumber: selectedVariant.modelNumber,
       color: selectedVariant.color,
       image: selectedVariant.images?.[0]?.url || "",
       quantity: qty,
+      weight: selectedVariant.weight,
+      height: selectedVariant.height,
+      length: selectedVariant.length,
+      breadth: selectedVariant.breadth,
     };
 
     dispatch(addToCart(cartItem));

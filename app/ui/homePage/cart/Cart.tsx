@@ -65,7 +65,7 @@ const Cart = (props: Props) => {
               Tax and Shipping calculated at checkout
             </p>
             <button className=" w-full mt-4 bg-green-900 block py-2 font-semibold text-[14px] rounded-lg">
-              <Link href={"/checkout"}>PROCESS TO CHAECKOUT</Link>
+              <Link href={"/cart/buy-now"}>PROCESS TO CHAECKOUTs</Link>
             </button>
           </div>
         </div>

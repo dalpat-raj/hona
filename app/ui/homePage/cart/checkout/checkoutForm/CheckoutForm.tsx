@@ -30,12 +30,12 @@ const CheckoutForm = ({orderHandler, paymentInfoHandler, saveAddress, setSaveAdd
       name: user?.name,
       email: user?.email,
       country: "India",
-      completeAddress: user?.address?.completeAddress,
-      nearbyLandmark: user?.address?.nearbyLandmark,
+      address: user?.address?.address,
+      landmark: user?.address?.landmark,
       city: user?.address?.city,
       state: user?.address?.state,
       pinCode: user?.address?.pinCode,
-      phone: user?.address?.phone
+      phone: user?.phone
     }
   });
 
@@ -87,24 +87,24 @@ const CheckoutForm = ({orderHandler, paymentInfoHandler, saveAddress, setSaveAdd
         <div className="mb-4 max-sm:mb-2">
           <label htmlFor="completeAddress" className="block text-sm font-medium text-gray-700">Complete Address</label>
           <textarea
-            {...register("completeAddress")}
+            {...register("address")}
             id="completeAddress"
             rows={3}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
-          {errors.completeAddress && <p className='text-red-500 text-[13px]'>{errors.completeAddress.message}</p>}
+          {errors.address && <p className='text-red-500 text-[13px]'>{errors.address.message}</p>}
         </div>
 
         {/* Landmark Section */}
         <div className="mb-4 max-sm:mb-2">
           <label htmlFor="nearbyLandmark" className="block text-sm font-medium text-gray-700">Nearby Landmark ( Optional ? )</label>
           <input
-            {...register("nearbyLandmark")}
+            {...register("landmark")}
             type="text"
             id="nearbyLandmark"
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
-          {errors.nearbyLandmark && <p className='text-red-500 text-[13px]'>{errors.nearbyLandmark.message}</p>}
+          {errors.landmark && <p className='text-red-500 text-[13px]'>{errors.landmark.message}</p>}
         </div>
 
         {/* City, State, PIN Code Section */}

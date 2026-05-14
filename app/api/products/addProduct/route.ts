@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { formatTitle } from "@/lib/helpers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
       feature,
       variants = [],
     } = body;
-
+    
     // ✅ Basic validation
     if (!title) {
       return NextResponse.json(
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-
+    const slug = formatTitle(title)
     // ❗ If no variants
     if (!variants || variants.length === 0) {
       return NextResponse.json(
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
     const product = await db.product.create({
       data: {
         title,
+        slug,
         description,
         collection,
         brand,
@@ -84,6 +86,7 @@ export async function POST(request: Request) {
                 .filter((img: any) => !img.loading && (img.url || img))
                 .map((img: any) => ({
                   url: img.url || img,
+                  fileId: img.fileId
                 })),
             },
           })),

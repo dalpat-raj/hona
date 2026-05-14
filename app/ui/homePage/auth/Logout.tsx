@@ -22,7 +22,7 @@ const Logout = () => {
         throw new Error(data?.message || "Logout failed");
       }
       toast.success("Log Out")
-      router.push("/");
+      router.back();
       router.refresh();
     } catch (error) {
       console.error(error);

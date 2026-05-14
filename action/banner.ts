@@ -76,7 +76,17 @@ export async function DeleteBanner(formData: FormData) {
   }
   
   try {
-      await db.banner.delete({
+
+    const banner = await db.banner.findFirst({
+      where: {id: rawId}
+    })
+
+    if(!banner){
+      return {error: "banner dose not exists"}
+    }
+
+    await deleteImageFromImageKit(banner.fileId);
+    await db.banner.delete({
       where: { id: rawId }, 
     });
     revalidatePath("/dashboard/banner");

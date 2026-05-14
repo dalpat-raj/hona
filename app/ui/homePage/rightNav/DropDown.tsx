@@ -18,7 +18,7 @@ const DropDown = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="w-[33px] h-[33px] outline-none rounded-full absolute top-0 left-0 py-1 z-50" />
 
-      <DropdownMenuContent className="mr-3 max-sm:mr-0 py-4 mt-3 max-sm:mt-1 max-sm:p-2 max-sm:pr-8">
+      <DropdownMenuContent className="bg-white mr-3 max-sm:mr-0 py-4 mt-3 max-sm:mt-1 max-sm:p-2 max-sm:pr-8">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
 

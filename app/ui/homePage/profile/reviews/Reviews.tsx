@@ -6,9 +6,10 @@ import Link from 'next/link';
 
 const Reviews = async() => {
   const user = await getCurrentUser();
+  
 
   return (
-    user?.reviews?.length ? 
+    user?.reviews && user.reviews.length > 0 ? 
     <div className='px-4 max-sm:px-2' >
       {user?.reviews?.map((item, i)=>(
         <ReviewCard item={item} key={i}/>

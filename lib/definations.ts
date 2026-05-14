@@ -2,13 +2,6 @@ export interface User {
   id: string; // Will be created on the database
   name: string | null;
   email: string; // Stored in cents
-  emailVerified: Date | null;
-  password: string | null;
-  image: string | null;
-  role: string;
-  addressId: number | null;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface AuthenticatedUser {
@@ -19,22 +12,23 @@ export interface AuthenticatedUser {
 }
 
 export interface Address {
-  id: number;
+  id: string;
   userId: string | null;
-  completeAddress: string;
-  nearbyLandmark: string;
-  phone: string;
+  address: string;
+  landmark: string;
   city: string;
   state: string;
-  pinCode: string | null;
+  pinCode: string;
+  isDefault: boolean;
+  addressType: string;
 }
 
 export interface CheckoutAddress {
   email: string;
   country: string;
   name: string;
-  completeAddress: string;
-  nearbyLandmark: string;
+  address: string;
+  landmark: string;
   city: string;
   state: string;
   pinCode: string;
@@ -63,7 +57,6 @@ export type UserProfile = {
     pinCode: string;
   } | null;
 };
-
 
 export type UserReviews = {
   id: string;
@@ -137,6 +130,7 @@ export interface FormData {
 export interface Product {
   id: string;
   title: string;
+  slug: string;
   description?: string;
   collection?: string;
   brand?: string;
@@ -146,7 +140,7 @@ export interface Product {
   reviews: Review[];
   createdAt: Date;
   updatedAt: Date;
-} 
+}
 
 export interface Variant {
   id: string;
@@ -172,18 +166,22 @@ export interface VariantImage {
   variantId?: string;
 }
 
-
-export interface Review{
+export interface Review {
   id: string;
   name: string;
   email: string;
   message: string;
-  images: string[];
+  images: ReviewImages[];
   productId: string;
   rating: number;
   createdAt: Date;
 }
 
+export interface ReviewImages {
+  id: string;
+  url: string;
+  fileId: string;
+}
 
 export interface CustomFormData {
   title: string;
@@ -213,7 +211,7 @@ export interface Collections {
 
 export interface CartItem {
   productId: string;
-  variantId?: string; 
+  variantId?: string;
   title: string;
   price: number;
   stock: number;
@@ -223,6 +221,12 @@ export interface CartItem {
   color?: string;
   brand?: string;
   quantity: number;
+  power: string;
+  capacity: string;
+  weight: number;
+  height: number;
+  length: number;
+  breadth: number;
 }
 export interface Orders {
   id: number;
@@ -393,12 +397,13 @@ export interface BannerData {
   id: string;
   image: string;
   url: string;
-  fileId:string;
+  fileId: string;
 }
 
 type ImageItem = {
   preview: string;
   url: string;
+  fileId: string;
   loading: boolean;
   error?: boolean;
 };

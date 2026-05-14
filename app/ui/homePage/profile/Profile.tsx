@@ -15,7 +15,7 @@ const Profile: React.FC<UserProps> = ({user}) => {
      
         <EmailForm userId={user?.id} userEmail={user?.email}/>
 
-        <PhoneForm userId={user?.id} userPhone={user?.phone}/>
+        <PhoneForm  userPhone={user?.phone}/>
     </div>
   )
 }

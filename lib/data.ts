@@ -64,7 +64,21 @@ export async function logoutUser() {
 //   return session?.user?.role;
 // }
 
+export async function getAllProducts() {
+  try {
+    const products = await db.product.findMany({
+      include: { reviews: true, variants: { include: { images: true } } },
+    });
+
+    return products;
+  } catch (error) {
+    console.error(error);
+    return []; 
+  }
+}
+
 export async function getProducts() {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
     const products = await db.product.findMany({
       include: { reviews: true, variants: {include: {images: true}} },
@@ -78,53 +92,52 @@ export async function getProducts() {
   }
 }
 
-export async function getProductDetails(title: string){
-  
-  const originalTitle = title.replace(/-/g, ' ');
+export async function getProductDetails(slug: string) {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   try {
-    const product = await db.product.findFirst({
+    const product = await db.product.findUnique({
       where: {
-        title: {
-          equals: originalTitle,
-          mode: 'insensitive',
-        },
+        slug: slug, 
       },
       include: {
-        variants:{
+        variants: {
           include: {
             images: true,
-          }
+          },
         },
         reviews: {
-          orderBy: [
-            {
-              createdAt: 'desc',
-            },
-          ],
+          orderBy: {
+            createdAt: "desc",
+          },
           take: 10,
+          include: {
+            images: true, // ⚠️ ye missing tha (important)
+          },
         },
       },
     });
 
     if (!product) {
-      return { error: 'Product not found' };
+      return { error: "Product not found" };
     }
 
-    // Sort reviews manually after fetching them
+    // 🔥 custom sort (same as before)
     product.reviews.sort((a, b) => {
       const aHasImages = a.images.length > 0 ? 1 : 0;
       const bHasImages = b.images.length > 0 ? 1 : 0;
 
-      // Sort by presence of images first, then by createdAt
-      return bHasImages - aHasImages || new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return (
+        bHasImages - aHasImages ||
+        new Date(b.createdAt).getTime() -
+          new Date(a.createdAt).getTime()
+      );
     });
 
     return product;
   } catch (error) {
-    return({error: 'Failed to fetch Product details.'});
+    return { error: "Failed to fetch Product details." };
   }
-  
 }
 
 export async function editProducts({id,formData}: {id: number, formData: FormData}){
@@ -306,6 +319,9 @@ export async function getReviews(){
           createdAt: 'desc',
         },
         take: 6,
+        include: {
+          images: true
+        }
       })
       
       return reviews;

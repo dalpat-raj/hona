@@ -4,17 +4,19 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { AiOutlineGift } from "react-icons/ai";
 import { FiTruck } from "react-icons/fi";
 import ProdDetailMenu from "./ProdDetailMenu";
-import { Product, Variant } from "@/lib/definations";
+import { Product, User, Variant } from "@/lib/definations";
 import ProductButtons from "./ProductButtons";
 import Rating from "../../rating/Rating";
 
 interface Props {
+  user: any;
   productDetail: Product;
   selectedVariant: Variant;
   setSelectedVariant: (v: Variant) => void;
 }
 
 const ProductDetails: React.FC<Props> = ({
+  user,
   productDetail,
   selectedVariant,
   setSelectedVariant,
@@ -109,7 +111,7 @@ const ProductDetails: React.FC<Props> = ({
       <div className="mt-4 text-green-900">
         {/* <ProdDetailMenu user={session?.user} product={productDetail} /> */}
         <ProdDetailMenu
-          user={{ name: "dalpat", email: "dalpatt@gmail.com", role: "USER" }}
+        user={user}
           product={productDetail}
         />
       </div>

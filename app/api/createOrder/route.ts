@@ -11,8 +11,8 @@ interface OrderRequestBody {
   address: {
     email: string;
     name: string;
-    completeAddress: string;
-    nearbyLandmark: string;
+    address: string;
+    landmark: string;
     city: string;
     state: string;
     pinCode: string;
@@ -45,22 +45,22 @@ export async function POST(request: Request) {
             isId = user.id;            
         }
     }else{
-      const existingUser = await db.user.findUnique({ where: { email: address.email } });
+      const existingUser = await db.user.findUnique({ where: { id: userId } });
       
 
       if (!existingUser) {
        const user = await db.user.create({
-          data: {
+          data: { 
             name: address.name,
             email: address.email,
+            phone:address.phone,
             address: {
               create: {
-                completeAddress: address.completeAddress,
-                nearbyLandmark: address.nearbyLandmark,
+                address: address.address,
+                landmark: address.landmark,
                 city: address.city,
                 state: address.state,
                 pinCode: address.pinCode,
-                phone: address.phone,
               },
             },
           },

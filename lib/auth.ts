@@ -17,6 +17,12 @@ export async function getCurrentUser() {
 
     const user = await db.user.findUnique({
       where: { phone },
+      include: {address: true, 
+        reviews: {
+        include: {
+          images: true
+        }
+      }}
     });
 
     return user;

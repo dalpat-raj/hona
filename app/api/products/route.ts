@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
     const url = new URL(request.url);
 

@@ -7,86 +7,56 @@ import { z } from "zod";
 
 
 export const NameUpdate = async (values: z.infer<typeof NameSchema>, userId: string) => {
-    // const validatedFields = NameSchema.safeParse(values);
-    // if(!validatedFields.success){
-    //   return { error: "Invalid fields!" };
-    // }
+    const validatedFields = NameSchema.safeParse(values);
+    if(!validatedFields.success){
+      return { error: "Invalid fields!" };
+    }
   
-    // const { firstName, lastName} = validatedFields.data;
+    const { firstName, lastName} = validatedFields.data;
   
-    // try {
-    //     const fullName = `${firstName} ${lastName}`;
-    //   const isUpdated = await db.user.update({
-    //     where: {id: userId},
-    //     data: {
-    //       name: fullName,
-    //     }
-    //   })
+    try {
+        const fullName = `${firstName} ${lastName}`;
+      const isUpdated = await db.user.update({
+        where: {id: userId},
+        data: {
+          name: fullName,
+        }
+      })
   
-    //   if(!isUpdated){
-    //     return { error: "Opps.... Failed ❌"}
-    //   }    
-    //   revalidatePath("/profile")
-    //   return { success: "Name Updated ✅" }
-    // } catch (error) {
-    //   return {error: "something went wrong ❌"}
-    // }
+      if(!isUpdated){
+        return { error: "Opps.... Failed ❌"}
+      }    
+      revalidatePath("/profile")
+      return { success: "Name Updated ✅" }
+    } catch (error) {
+      return {error: "something went wrong ❌"}
+    }
   }
   
   export const EmailUpdate = async (values: z.infer<typeof EmailSchema>, id: string) => {
-    // const validatedFields = EmailSchema.safeParse(values);
+    const validatedFields = EmailSchema.safeParse(values);
   
-    // if(!validatedFields.success){
-    //   return { error: "Invalid fields!" };
-    // }
+    if(!validatedFields.success){
+      return { error: "Invalid fields!" };
+    }
   
-    // const { email } = validatedFields.data;
+    const { email } = validatedFields.data;
   
-    // try {
-    //   const isUpdated = await db.user.update({
-    //     where: {id: id},
-    //     data: {
-    //       email: email,
-    //     }
-    //   })
+    try {
+      const isUpdated = await db.user.update({
+        where: {id: id},
+        data: {
+          email: email,
+        }
+      })
   
-    //   if(!isUpdated){
-    //     return { error: "Opps.... Failed ❌"}
-    //   }
-    //   revalidatePath("/profile")
-    //   return { success: "Name Updated ✅" }
-    // } catch (error) {
-    //   return {error: "something went wrong ❌"}
-    // }
+      if(!isUpdated){
+        return { error: "Opps.... Failed ❌"}
+      }
+      revalidatePath("/profile")
+      return { success: "Name Updated ✅" }
+    } catch (error) {
+      return {error: "something went wrong ❌"}
+    }
   }
   
-  export const PhoneUpdate = async (values: z.infer<typeof PhoneSchema>, id: string) => {
-    // const validatedFields = PhoneSchema.safeParse(values);
-  
-    // if(!validatedFields.success){
-    //   return { error: "Invalid fields!" };
-    // }
-  
-    // const { phone } = validatedFields.data;
-  
-    // try {
-    //   const isUpdated = await db.user.update({
-    //     where: {id: id},
-    //     data: {
-    //       address: {
-    //         update: {
-    //           phone: phone,
-    //         }
-    //       }
-    //     }
-    //   })
-  
-    //   if(!isUpdated){
-    //     return { error: "Opps.... Failed ❌"}
-    //   }
-    //   revalidatePath("/profile")
-    //   return { success: "Name Updated ✅" }
-    // } catch (error) {
-    //   return {error: "something went wrong ❌"}
-    // }
-  }

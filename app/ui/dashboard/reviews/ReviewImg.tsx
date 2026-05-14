@@ -2,15 +2,15 @@ import Image from 'next/image';
 import React, { useState } from 'react'
 import { ImageSkeleton } from '@/app/ui/skeletons';
 
-const ReviewImg = ({img}: {img: string}) => {
+const ReviewImg = ({img}: {img: any}) => {
   const [imageLoading, setImageLoading] = useState(true);
 
   return (
     <div className='w-[70px] h-[70px]'>
         {imageLoading && <ImageSkeleton/>}
         <Image
-        src={img}
-        alt={img + 1 }
+        src={img?.url}
+        alt={img?.url }
         width={0}
         height={0}
         sizes='100vw'

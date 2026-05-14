@@ -16,21 +16,23 @@ model User {
   role      UserRole  @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  reviews Review[]
   address   Address[]
   orders    Order[]
 }
 
 model Address {
-  id      String  @id @default(cuid())
-  userId  String
-  name    String
-  phone   String
-  pincode String
-  city    String
-  state   String
-  address String
-  user    User    @relation(fields: [userId], references: [id])
-  orders  Order[]
+  id        String  @id @default(cuid())
+  userId    String
+  addressType      String?  @default("Home")
+  pinCode   String
+  city      String
+  state     String
+  country   String    @default("India") 
+  address   String    
+  landmark  String?  
+  isDefault Boolean   @default(false) 
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model Order {
@@ -43,7 +45,6 @@ model Order {
   shiprocketId String?
   trackingId   String?
   createdAt    DateTime      @default(now())
-  address      Address       @relation(fields: [addressId], references: [id])
   user         User          @relation(fields: [userId], references: [id])
   items        OrderItem[]
   paymentInfos PaymentInfo[]
@@ -74,6 +75,7 @@ model PaymentInfo {
 model Product {
   id            String         @id @default(cuid())
   title         String
+  slug          String @unique
   description   String?
   collection    String?
   brand         String?
@@ -109,6 +111,7 @@ model Variant {
 model VariantImage {
   id        String  @id @default(cuid())
   url       String
+  fileId    String?
   variantId String
   variant   Variant @relation(fields: [variantId], references: [id])
 }
@@ -136,11 +139,21 @@ model Review {
   name      String
   email     String
   message   String
-  images    String[]
   rating    Float
+  images    ReviewImages[]
   productId String
+  userId    String?
   createdAt DateTime @default(now())
   product   Product  @relation(fields: [productId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model ReviewImages {
+  id       String  @id @default(cuid())
+  url      String
+  fileId   String
+  reviewId String
+  review   Review @relation(fields: [reviewId], references: [id])
 }
 
 model Collection {

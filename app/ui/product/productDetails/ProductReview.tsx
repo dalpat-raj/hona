@@ -6,20 +6,20 @@ import Rating from "@/app/ui/rating/Rating";
 const ReviewForm = dynamic(() => import("@/app/ui/rating/ReviewForm"), {
   ssr: false,
 });
-import { Product, SessionUser } from "@/lib/definations";
+import { Product } from "@/lib/definations";
 import { formatDate } from "@/lib/helpers";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface ProductDetailsProps {
-  user: SessionUser | undefined;
+  user: any;
   product: Product;
 }
 
-const ProductReview: React.FC<ProductDetailsProps> = ({ user, product }) => {
-  // const ProductReview: React.FC<ProductDetailsProps> = ({user, product}) => {
+const ProductReview: React.FC<ProductDetailsProps> = ({user, product }) => {
   const [reviewBox, setReviewBox] = useState<boolean>(false);
   const [imageLoading, setImageLoading] = useState(true);
+  
 
   if (reviewBox) {
     return (
@@ -45,12 +45,10 @@ const ProductReview: React.FC<ProductDetailsProps> = ({ user, product }) => {
       <div className="w-full flex justify-center items-center border-b border-green-200 pb-4 mb-4">
         <div className="flex flex-col  gap-1 items-center ">
           <h2 className="text-[18px] font-bold text-green-900">
-            {/* {product?.rating?.toFixed(1)} */}
-            4
+            {product?.ratings?.toFixed(1)}
           </h2>
           <div>
-            {/* <Rating rating={product?.rating?.toFixed(1)} /> */}
-            4
+            <Rating rating={product?.ratings?.toFixed(1)} />
           </div>
           <p className="text-sm text-green-900">
             {product?.reviews?.length} reviews
@@ -75,7 +73,7 @@ const ProductReview: React.FC<ProductDetailsProps> = ({ user, product }) => {
                 <p className="text-[14px]">{item?.name}</p>
               </div>
 
-              <div className="flex justify-center items-center gap-2 text-[12px] text-gray-400">
+              <div className="flex justify-end  gap-2 text-[12px] text-gray-400">
                 <p>{formatDate(item?.createdAt)}</p>
                 <p>
                   {item.createdAt.toLocaleTimeString("en-US", {
@@ -87,7 +85,7 @@ const ProductReview: React.FC<ProductDetailsProps> = ({ user, product }) => {
               </div>
             </div>
             <div className="my-2">
-              <Rating rating={5} />
+              <Rating rating={item?.rating} />
             </div>
             <div>
               <p className="text-gray-500 leading-none">{item?.message}</p>
@@ -100,8 +98,8 @@ const ProductReview: React.FC<ProductDetailsProps> = ({ user, product }) => {
                       <div className="w-[70px] h-[70px]">
                         {imageLoading && <ImageSkeleton />}
                         <Image
-                          src={item}
-                          alt={i + item}
+                          src={item?.url}
+                          alt={item?.url}
                           width={0}
                           height={0}
                           sizes="100vw"
@@ -117,8 +115,8 @@ const ProductReview: React.FC<ProductDetailsProps> = ({ user, product }) => {
                     <DialogContent>
                       <div className="h-[70vh]">
                         <Image
-                          src={item}
-                          alt={item}
+                          src={item?.url}
+                          alt={item?.url}
                           width={0}
                           height={0}
                           sizes="100vw"

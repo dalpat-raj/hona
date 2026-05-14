@@ -17,7 +17,7 @@ const Cart = ({ setOpenCart, cartItem }: OpenCartSidebarProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const totalPrice = cartItem?.reduce(
+   const totalPrice = cartItem?.reduce(
     (acc, item) => acc + item.quantity * item.price,
     0,
   );
@@ -30,6 +30,7 @@ const Cart = ({ setOpenCart, cartItem }: OpenCartSidebarProps) => {
     setOpenCart(false);
     router.push("/checkout");
   };
+ 
   const handleCart = () => {
     setOpenCart(false);
     router.push("/cart");
@@ -84,9 +85,9 @@ const Cart = ({ setOpenCart, cartItem }: OpenCartSidebarProps) => {
             <>
               <button
                 onClick={handleCheckout}
-                className="mt-4 w-full bg-bgg block py-2 text-white font-semibold text-[14px] rounded-lg"
+                className="mt-4 w-full bg-bgg py-2 text-white font-semibold rounded-lg"
               >
-                PROCESS TO CHAECKOUT
+                PROCESS TO CHECKOUT
               </button>
               <button
                 onClick={handleCart}

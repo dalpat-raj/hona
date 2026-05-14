@@ -90,6 +90,10 @@ export default async function RootLayout({
       lang="en"
       className={cn(poppins.className, "font-sans", geist.variable)}
     >
+      <link
+  rel="stylesheet"
+  href="https://custom-login-sr.netlify.app/assets/styles/shopify.css"
+/>
       <body>
         <StoreProvider>
           <Toaster position="top-right" />
@@ -98,10 +102,10 @@ export default async function RootLayout({
           {children}
           {role !== "ADMIN" && <Footer />}
         </StoreProvider>
-        {/* <Script 
-        src="https://checkout.shiprocket.in/checkout.js" 
-        strategy="lazyOnload"
-        /> */}
+        <Script
+  src="https://custom-login-sr.netlify.app/assets/js/channels/login.js"
+  strategy="afterInteractive"
+/>
         <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

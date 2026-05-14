@@ -1,18 +1,23 @@
-import SimilarProd from "@/app/ui/product/similarProduct/SimilarProd"
+import SimilarProd from "@/app/ui/product/similarProduct/SimilarProd";
 import ProductClient from "./ProductClient";
 import { getProductDetails } from "@/lib/data";
 import Script from "next/script";
+import { getCurrentUser } from "@/lib/auth";
+import { notFound } from "next/navigation";
 
-const ProductUi = async ({ title }: { title: string }) => {
-  const product = await getProductDetails(title);
-  
-    if ("error" in product) {
-    throw new Error("Product not found");
+const ProductUi = async ({ slug }: { slug: string }) => {
+  const [product, user] = await Promise.all([
+    getProductDetails(slug),
+    getCurrentUser(),
+  ]);
+
+  if ("error" in product) {
+     notFound();
   }
 
   return (
     <div className="bg-bga">
-        <Script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -34,7 +39,7 @@ const ProductUi = async ({ title }: { title: string }) => {
           }),
         }}
       />
-      <ProductClient product={product} />
+      <ProductClient product={product} user={user}/>
       <SimilarProd collection={product?.collection} id={product?.id} />
     </div>
   );

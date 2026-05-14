@@ -14,7 +14,7 @@ import logo from "../../../public/logo.png"
 
 const Footer = () => {
   return (
-    <div className="w-full px-24 max-lg:px-12 max-md:px-4 max-sm:px-2 bg-bga border-t-green-200">
+    <div className="w-full px-24 max-lg:px-12 max-md:px-4 max-sm:px-2 bg-bga border-t-green">
       <div className="py-12 max-sm:py-4 grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-8 text-green-600 max-sm:hidden">
         <div>
           <div className="w-[180px] max-sm:w-[140px] ">

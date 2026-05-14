@@ -80,11 +80,12 @@ export default function SignInForm() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ token }),
         });
         toast.success("Login successful 🎉");
-        router.back();
         router.refresh();
+        router.back();
       } catch (err) {
         setError("OTP failed");
       } finally {

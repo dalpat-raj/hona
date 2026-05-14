@@ -2,13 +2,14 @@ import ProductUi from "@/app/ui/product/productDetails/ProductUi";
 import { getProductDetails } from "@/lib/data";
 
 interface PageProps {
-  params: { title: string };
+  params: {slug: string };
 }
 
 
 export async function generateMetadata({ params }: PageProps) {
-  const decodedTitle = decodeURIComponent(params.title);
-  const product = await getProductDetails(decodedTitle);
+  const {slug} = await params
+  
+  const product = await getProductDetails(slug);
 
   if ("error" in product) {
     return {
@@ -29,13 +30,12 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 const page = async ({ params }: PageProps) => {
-  const { title } = await params;
-
-  const decodedTitle = decodeURIComponent(title);
-
+  const {slug} = await params;
+  
   return (
     <>
-    <ProductUi title={decodedTitle} />
+    
+    <ProductUi slug={slug} />
     </>
   );
 };

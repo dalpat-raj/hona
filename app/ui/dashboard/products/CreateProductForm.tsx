@@ -64,6 +64,7 @@ const CreateProductForm = () => {
       preview: URL.createObjectURL(file),
       loading: true,
       url: "",
+      fileId: "",
     }));
 
     updated[index].images.push(...newImages);
@@ -81,18 +82,18 @@ const CreateProductForm = () => {
         });
 
         const data = await res.json();
-
+        
         setFormData((prev) => {
           const updatedVariants = [...prev.variants];
 
-          const img =
-            updatedVariants[index].images[
-              updatedVariants[index].images.length - filesArray.length + i
-            ];
+          const startIndex =
+            updatedVariants[index].images.length - filesArray.length;
 
-          img.url = data.url;
+          const img = updatedVariants[index].images[startIndex + i];
+
+          img.url = data.response.url;
+          img.fileId = data.response.fileId;
           img.loading = false;
-          URL.revokeObjectURL(img.preview);
 
           return { ...prev, variants: updatedVariants };
         });
@@ -120,6 +121,11 @@ const CreateProductForm = () => {
     e,
   ) => {
     e.preventDefault();
+    if (isUploading) {
+      toast.error("Wait for images to finish uploading");
+      return;
+    }
+
 
     try {
       setCreateProduct(true);
@@ -135,15 +141,18 @@ const CreateProductForm = () => {
       const cleanVariants = formData.variants.map((v) => ({
         ...v,
         images: v.images
-          .filter((img) => img.url && !img.loading) // ✅ FIX
-          .map((img) => img.url),
+          .filter((img) => img.url && !img.loading)
+          .map((img) => ({
+            url: img.url,
+            fileId: img.fileId,
+          })),
       }));
 
       const finalData = {
         ...formData,
         variants: cleanVariants,
       };
-      
+
       const response = await axios.post("/api/products/addProduct", finalData);
 
       if (response) {
@@ -245,7 +254,7 @@ const CreateProductForm = () => {
   };
 
   return (
-    <div className="max-w-full mx-auto bg-white p-6 rounded-lg shadow-md mt-4 bg-bga">
+    <div className="max-w-full mx-auto p-6 rounded-lg shadow-md mt-4 bg-white">
       <h1 className="text-2xl font-bold mb-6 text-blue text-center">
         Make Your Product's
       </h1>
@@ -332,222 +341,222 @@ const CreateProductForm = () => {
       {/* ✅ CAPACITY VARIANTS */}
 
       <div className="mt-8 relative">
-        <p className="text-blue font-[20px] font-bold pb-4">Varients</p>
+        <p className="text-blue  font-bold pb-4">Varients</p>
         {formData.variants.map((v, index) => (
           <>
-          <div
-            key={index}
-            className="grid grid-rows-2 grid-cols-6 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-2 mb-2"
-          >
-            <div className="col-span-1">
-              <Label htmlFor="modelNumber" title="Model Number" />
-              <Input
-                name="modelNumber"
-                placeholder="Model Number"
-                value={v.modelNumber}
-                onChange={(e) =>
-                  handleVariantChange(index, "modelNumber", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-span-1">
-              <Label htmlFor="sku" title="SKU" />
-              <Input
-                name="sku"
-                id="sku"
-                placeholder="Stock Keeping Unit"
-                value={v.sku}
-                onChange={(e) =>
-                  handleVariantChange(index, "sku", e.target.value)
-                }
-              />
-            </div>
-
-            <div className="col-span-1">
-              <Label htmlFor="stock" title={"Stock Quantity"} />
-              <Input
-                type="number"
-                name="stock"
-                id="stock"
-                placeholder="How many stock you have"
-                value={v?.stock}
-                onChange={(e) =>
-                  handleVariantChange(index, "stock", Number(e.target.value))
-                }
-              />
-            </div>
-            <div className="col-span-1">
-              <Label htmlFor="sprice" title={"Selling Price ( ₹ )"} />
-              <Input
-                type="number"
-                id="sprice"
-                name="sellingPrice"
-                placeholder="Selling Price"
-                value={v.sellingPrice}
-                onChange={(e) =>
-                  handleVariantChange(
-                    index,
-                    "sellingPrice",
-                    Number(e.target.value),
-                  )
-                }
-              />
-            </div>
-            <div className="col-span-1">
-              <Label htmlFor="oprice" title={"Origial Price ( ₹ )"} />
-              <Input
-                type="number"
-                id="oprice"
-                name="originalPrice"
-                placeholder="Original Price"
-                value={v.originalPrice}
-                onChange={(e) =>
-                  handleVariantChange(
-                    index,
-                    "originalPrice",
-                    Number(e.target.value),
-                  )
-                }
-              />
-            </div>
-
-            <div className="colorr">
-              {/* Hidden Color Picker */}
-              <Label htmlFor="color" title={"choose Color"} />
-              <div className="relative">
-                <input
-                  id="color"
-                  type="color"
-                  value={v.color || "#000000"}
-                  ref={(el) => {
-                    colorInputRefs.current[index] = el;
-                  }}
+            <div
+              key={index}
+              className="grid grid-rows-2 grid-cols-6 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-2 mb-2"
+            >
+              <div className="col-span-1">
+                <Label htmlFor="modelNumber" title="Model Number" />
+                <Input
+                  name="modelNumber"
+                  placeholder="Model Number"
+                  value={v.modelNumber}
                   onChange={(e) =>
-                    handleVariantChange(index, "color", e.target.value)
+                    handleVariantChange(index, "modelNumber", e.target.value)
                   }
-                  className="hborder rounded cursor-pointer p-0 absolute top-0 left-0"
                 />
-
-                {/* Clickable Input */}
-
-                <input
-                  type="text"
-                  value={v.color || "#000000"}
-                  readOnly
-                  onClick={() => colorInputRefs.current[index]?.click()}
-                  className="border-0 px-2 py-1 text-white rounded w-[120px] cursor-pointer"
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="sku" title="SKU" />
+                <Input
+                  name="sku"
+                  id="sku"
+                  placeholder="Stock Keeping Unit"
+                  value={v.sku}
+                  onChange={(e) =>
+                    handleVariantChange(index, "sku", e.target.value)
+                  }
                 />
+              </div>
 
-                {/* Preview */}
-                <div
-                  onClick={() => colorInputRefs.current[index]?.click()}
-                  className="w-full h-full rounded z-8 border cursor-pointer absolute top-0 right-0"
-                  style={{ backgroundColor: v.color || "#000000" }}
-                ></div>
+              <div className="col-span-1">
+                <Label htmlFor="stock" title={"Stock Quantity"} />
+                <Input
+                  type="number"
+                  name="stock"
+                  id="stock"
+                  placeholder="How many stock you have"
+                  value={v?.stock}
+                  onChange={(e) =>
+                    handleVariantChange(index, "stock", Number(e.target.value))
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="sprice" title={"Selling Price ( ₹ )"} />
+                <Input
+                  type="number"
+                  id="sprice"
+                  name="sellingPrice"
+                  placeholder="Selling Price"
+                  value={v.sellingPrice}
+                  onChange={(e) =>
+                    handleVariantChange(
+                      index,
+                      "sellingPrice",
+                      Number(e.target.value),
+                    )
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="oprice" title={"Origial Price ( ₹ )"} />
+                <Input
+                  type="number"
+                  id="oprice"
+                  name="originalPrice"
+                  placeholder="Original Price"
+                  value={v.originalPrice}
+                  onChange={(e) =>
+                    handleVariantChange(
+                      index,
+                      "originalPrice",
+                      Number(e.target.value),
+                    )
+                  }
+                />
+              </div>
+
+              <div className="colorr">
+                {/* Hidden Color Picker */}
+                <Label htmlFor="color" title={"choose Color"} />
+                <div className="relative">
+                  <input
+                    id="color"
+                    type="color"
+                    value={v.color || "#000000"}
+                    ref={(el) => {
+                      colorInputRefs.current[index] = el;
+                    }}
+                    onChange={(e) =>
+                      handleVariantChange(index, "color", e.target.value)
+                    }
+                    className="hborder rounded cursor-pointer p-0 absolute top-0 left-0"
+                  />
+
+                  {/* Clickable Input */}
+
+                  <input
+                    type="text"
+                    value={v.color || "#000000"}
+                    readOnly
+                    onClick={() => colorInputRefs.current[index]?.click()}
+                    className="border-0 px-2 py-1 text-white rounded w-[120px] cursor-pointer"
+                  />
+
+                  {/* Preview */}
+                  <div
+                    onClick={() => colorInputRefs.current[index]?.click()}
+                    className="w-full h-full rounded z-8 border cursor-pointer absolute top-0 right-0"
+                    style={{ backgroundColor: v.color || "#000000" }}
+                  ></div>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="capacity" title="Capacity" />
+                <Input
+                  id="capacity"
+                  placeholder="Capacity"
+                  value={v.capacity}
+                  onChange={(e) =>
+                    handleVariantChange(index, "capacity", e.target.value)
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="power" title="Power" />
+                <Input
+                  id="power"
+                  placeholder="Power"
+                  value={v.power}
+                  onChange={(e) =>
+                    handleVariantChange(index, "power", e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="col-span-1">
+                <Label htmlFor="length" title="Length (Depth)" />
+                <Input
+                  type="number"
+                  name="length"
+                  id="length"
+                  placeholder="length"
+                  value={v.length}
+                  onChange={(e) =>
+                    handleVariantDimensionChange(
+                      index,
+                      "length",
+                      Number(e.target.value),
+                    )
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="breadth" title="Breadth (Width)" />
+                <Input
+                  type="number"
+                  name="breadth"
+                  id="breadth"
+                  placeholder="breadth"
+                  value={v.breadth}
+                  onChange={(e) =>
+                    handleVariantDimensionChange(
+                      index,
+                      "breadth",
+                      Number(e.target.value),
+                    )
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="height" title="Height" />
+                <Input
+                  type="number"
+                  name="height"
+                  id="height"
+                  placeholder="height"
+                  value={v.height}
+                  onChange={(e) =>
+                    handleVariantDimensionChange(
+                      index,
+                      "height",
+                      Number(e.target.value),
+                    )
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <Label htmlFor="weight" title="Weight (KG's)" />
+                <Input
+                  type="number"
+                  name="weight"
+                  id="weight"
+                  placeholder="weight"
+                  value={v.weight}
+                  onChange={(e) =>
+                    handleVariantDimensionChange(
+                      index,
+                      "weight",
+                      Number(e.target.value),
+                    )
+                  }
+                />
+              </div>
+              <div className="absolute top-0 right-0">
+                <button
+                  onClick={() => removeVariant(index)}
+                  className="bg-red-500 text-white px-2"
+                >
+                  X
+                </button>
               </div>
             </div>
-
-            <div>
-              <Label htmlFor="capacity" title="Capacity" />
-              <Input
-                id="capacity"
-                placeholder="Capacity"
-                value={v.capacity}
-                onChange={(e) =>
-                  handleVariantChange(index, "capacity", e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="power" title="Power" />
-              <Input
-                id="power"
-                placeholder="Power"
-                value={v.power}
-                onChange={(e) =>
-                  handleVariantChange(index, "power", e.target.value)
-                }
-              />
-            </div>
-
-            <div className="col-span-1">
-              <Label htmlFor="length" title="Length (Depth)" />
-              <Input
-                type="number"
-                name="length"
-                id="length"
-                placeholder="length"
-                value={v.length}
-                onChange={(e) =>
-                  handleVariantDimensionChange(
-                    index,
-                    "length",
-                    Number(e.target.value),
-                  )
-                }
-              />
-            </div>
-            <div className="col-span-1">
-              <Label htmlFor="breadth" title="Breadth (Width)" />
-              <Input
-                type="number"
-                name="breadth"
-                id="breadth"
-                placeholder="breadth"
-                value={v.breadth}
-                onChange={(e) =>
-                  handleVariantDimensionChange(
-                    index,
-                    "breadth",
-                    Number(e.target.value),
-                  )
-                }
-              />
-            </div>
-            <div className="col-span-1">
-              <Label htmlFor="height" title="Height" />
-              <Input
-                type="number"
-                name="height"
-                id="height"
-                placeholder="height"
-                value={v.height}
-                onChange={(e) =>
-                  handleVariantDimensionChange(
-                    index,
-                    "height",
-                    Number(e.target.value),
-                  )
-                }
-              />
-            </div>
-            <div className="col-span-1">
-              <Label htmlFor="weight" title="Weight (KG's)" />
-              <Input
-                type="number"
-                name="weight"
-                id="weight"
-                placeholder="weight"
-                value={v.weight}
-                onChange={(e) =>
-                  handleVariantDimensionChange(
-                    index,
-                    "weight",
-                    Number(e.target.value),
-                  )
-                }
-              />
-            </div>
-            <div className="absolute top-0 right-0">
-              <button
-                onClick={() => removeVariant(index)}
-                className="bg-red-500 text-white px-2"
-              >
-                X
-              </button>
-            </div>
-          </div>
-          <div
+            <div
               className={`mt-4 row-span-1 col-span-6 max-lg:col-span-4 max-sm:grid-cols-2 w-full min-h-[200px] border-2 border-dashed border-green rounded-lg flex flex-col items-center justify-center cursor-pointer relative overflow-hidden ${
                 dragActive ? "border-blue-500 bg-blue-50" : "border-green-400"
               }`}
@@ -625,7 +634,6 @@ const CreateProductForm = () => {
                 ))}
               </div>
             </div>
-
           </>
         ))}
 

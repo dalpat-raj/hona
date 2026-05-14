@@ -8,16 +8,17 @@ export async function POST(req: NextRequest) {
 
     if (sessionCookie) {
       try {
-        // ✅ checkRevoked true (important)
+        // ✅ verify + check revoked
         const decoded = await getAuth(app).verifySessionCookie(
           sessionCookie,
           true
         );
 
-        // ✅ revoke tokens (logout from all devices)
+        // ✅ revoke all sessions (important for security)
         await getAuth(app).revokeRefreshTokens(decoded.uid);
-      } catch (err) {
-        console.log("Session already invalid or expired");
+      } catch (err: any) {
+        // 🔥 expected cases: expired / already revoked
+        console.log("Session already invalid:", err.code);
       }
     }
 
@@ -26,33 +27,20 @@ export async function POST(req: NextRequest) {
       message: "Logged out successfully",
     });
 
-    // ✅ Strong cookie delete
-    response.cookies.set({
-      name: "session",
-      value: "",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/", // important
-      expires: new Date(0),
-    });
+    // ✅ Proper cookie deletion (clean & reliable)
+    response.cookies.delete("session");
 
     return response;
   } catch (error) {
     console.error("Logout error:", error);
 
-    // ⚠️ even if error, still try to logout user (UX > strict failure)
+    // 🔥 Even on error → force logout UX
     const response = NextResponse.json({
       success: true,
-      message: "Logged out (with fallback)",
+      message: "Logged out (fallback)",
     });
 
-    response.cookies.set({
-      name: "session",
-      value: "",
-      path: "/",
-      expires: new Date(0),
-    });
+    response.cookies.delete("session");
 
     return response;
   }

@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic"
-const Reviews = dynamic(()=> import('@/app/ui/homePage/profile/reviews/Reviews'),{loading:()=><LoaderBall/>})
-import LoaderBall from "@/app/ui/loader/BallLoader"
+import Reviews from '@/app/ui/homePage/profile/reviews/Reviews'
 
 const page = () => {
   return (

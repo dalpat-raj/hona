@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { formatTitle } from "@/lib/helpers";
 import { productData } from "@/lib/placeholder_data";
 
 async function main() {
@@ -6,6 +7,7 @@ async function main() {
     await db.product.create({
   data: {
     title: product.title,
+    slug: formatTitle(product.title),
     description: product.description,
     brand: product.brand,
     collection: product.collection,

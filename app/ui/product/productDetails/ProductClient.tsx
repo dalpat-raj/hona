@@ -6,7 +6,7 @@ import ProductDetails from "./ProductDetails";
 
 
 
-const ProductClient = ({ product }: any) => {
+const ProductClient = ({ product, user }: any) => {
   const [selectedVariant, setSelectedVariant] = useState(
     product?.variants?.[0] || null
     );
@@ -20,6 +20,7 @@ const ProductClient = ({ product }: any) => {
         </div>
         <div className="col-span-1  max-sm:col-span-2 pl-12 max-md:px-4 max-sm:px-0 scroll-smooth overflow-scroll no-scrollbar overflow-y-auto">
           <ProductDetails
+            user={user}
             productDetail={product}
             selectedVariant={selectedVariant}
             setSelectedVariant={setSelectedVariant}

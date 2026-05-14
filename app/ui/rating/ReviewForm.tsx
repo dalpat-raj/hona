@@ -23,6 +23,12 @@ type ProductDetailsProps = {
 };
 
 type Review = z.infer<typeof reviewSchema>;
+type UploadImage = {
+  preview: string;
+  url: string;
+  fileId: string;
+  loading: boolean;
+};
 
 const ReviewForm: React.FC<ProductDetailsProps> = ({
   setReviewBox,
@@ -30,9 +36,8 @@ const ReviewForm: React.FC<ProductDetailsProps> = ({
   product,
 }) => {
   const [rating, setRating] = useState<number>(0);
-  const [imagesShow, setImagesShow] = useState<string[]>([]);
+  const [imagesShow, setImagesShow] = useState<UploadImage[]>([]);
   const [isPending, startTransition] = useTransition();
-  const [imageLoading, setImageLoading] = useState(true);
   const [imageLoading1, setImageLoading1] = useState(true);
   const {
     register,
@@ -46,12 +51,52 @@ const ReviewForm: React.FC<ProductDetailsProps> = ({
     },
   });
 
-  const handleUploadComplete = (res: any) => {
-    if (res) {
-      const urls = res.map((file: { url: string }) => file.url);
-      setImagesShow(urls);
-      return urls;
-    }
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const filesArray = Array.from(files);
+
+    // preview add
+    const newImages = filesArray.map((file) => ({
+      preview: URL.createObjectURL(file),
+      url: "",
+      fileId: "",
+      loading: true,
+    }));
+
+    setImagesShow((prev) => [...prev, ...newImages]);
+
+    filesArray.forEach(async (file, i) => {
+      try {
+        const fd = new FormData();
+        fd.append("file", file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: fd,
+        });
+
+        const data = await res.json();
+
+        setImagesShow((prev) => {
+          const updated = [...prev];
+          const index = updated.length - filesArray.length + i;
+
+          updated[index].url = data.response?.url;
+          updated[index].fileId = data.response?.fileId;
+          updated[index].loading = false;
+
+          if (updated[index].url) {
+            URL.revokeObjectURL(updated[index].preview);
+          }
+
+          return updated;
+        });
+      } catch {
+        toast.error("Upload failed");
+      }
+    });
   };
 
   async function handleReviewSubmit(data: Review) {
@@ -59,16 +104,23 @@ const ReviewForm: React.FC<ProductDetailsProps> = ({
       toast.error("Please Select Rating");
       return;
     }
+    const cleanImages = imagesShow
+      .filter((img) => img.url && !img.loading)
+      .map((img) => ({
+        url: img.url,
+        fileId: img.fileId,
+      }));
+
     startTransition(() => {
-      reviewAdd(data, product?.id, rating, imagesShow)
+      reviewAdd(data, product?.id, rating, cleanImages, user?.id)
         .then((res) => {
-          setReviewBox(false);
           if (res?.success) toast.success(res.success);
           if (res?.error) toast.error(res.error);
+          setReviewBox(false);
         })
         .catch((error) => {
-          setReviewBox(false);
           toast.error("Error something wrong 😢");
+          setReviewBox(false);
         });
     });
   }
@@ -89,7 +141,10 @@ const ReviewForm: React.FC<ProductDetailsProps> = ({
           <div className="w-[50px] h-[50px]">
             {imageLoading1 && <ImageSkeleton />}
             <Image
-              src={product?.images[0] ? product?.images[0] : "/e22.png"}
+              src={
+                product?.variants[0]?.images[0]?.url ||
+                product?.variants[1]?.images[0]?.url
+              }
               alt="al"
               width={0}
               height={0}
@@ -101,9 +156,9 @@ const ReviewForm: React.FC<ProductDetailsProps> = ({
           <div>
             <p className="text-[14px] font-bold">{product?.title}</p>
             <div className="flex justify-start items-center gap-2">
-              <Rating rating={product?.rating} />
+              <Rating rating={product?.ratings} />
               <p className="text-[14px] text-gray-500">
-                {product?.review.length} reviews
+                {product?.reviews.length} reviews
               </p>
             </div>
           </div>
@@ -144,7 +199,7 @@ const ReviewForm: React.FC<ProductDetailsProps> = ({
         <form onSubmit={handleSubmit(handleReviewSubmit)}>
           <div className="mb-3">
             <label htmlFor="name" className="text-[12px] font-semibold">
-              Your Name
+              Display Name
             </label>
             <input
               {...register("name")}
@@ -195,29 +250,46 @@ const ReviewForm: React.FC<ProductDetailsProps> = ({
           </div>
 
           {imagesShow?.length >= 1 ? (
-            <div className="flex justify-start gap-2 items-center my-2 mb-4 overflow-x-scroll no-scrollbar">
-              {imagesShow?.map((item, i) => (
-                <div className="w-[50px] h-[50px]" key={i}>
-                  {imageLoading && <ImageSkeleton />}
-                  <Image
-                    src={item || "/e22.jpg"}
-                    alt={`Image ${i + 1}`}
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                    onLoad={() => setImageLoading(false)}
-                  />
+            <div className="flex gap-2 overflow-x-auto my-3">
+              {imagesShow.map((img, i) => (
+                <div key={i} className="w-[60px] h-[60px] relative">
+                  {/* remove button */}
+                  <button
+                    onClick={() =>
+                      setImagesShow((prev) =>
+                        prev.filter((_, idx) => idx !== i),
+                      )
+                    }
+                    className="absolute top-0 right-0 bg-red-500 text-white text-xs px-1 z-10"
+                  >
+                    X
+                  </button>
+
+                  {img.loading ? (
+                    <ImageSkeleton />
+                  ) : (
+                    <Image
+                      src={img.url || img.preview}
+                      alt="review"
+                      fill
+                      className="object-cover rounded"
+                    />
+                  )}
                 </div>
               ))}
             </div>
           ) : (
             <div className="my-2 max-sm:my-4 w-[100%] flex justify-start items-start">
-              
+              <label className="cursor-pointer flex items-center gap-2 text-sm text-gray-600">
+                <CiImageOn size={20} />
+                Upload Images
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+              </label>
             </div>
           )}
 
