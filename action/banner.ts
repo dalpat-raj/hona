@@ -4,13 +4,15 @@ import { deleteImageFromImageKit } from "@/lib/imageKit";
 import { revalidatePath } from "next/cache";
 
 export async function createBanner(
-  image: string,
-  fileId: string,
+  imageC: string,
+  fileIdC: string,
+  imageM: string,
+  fileIdM: string,
   formData: FormData
 ) {
   
 const url = formData.get("url") as string;
-  if (!image || !fileId || !url) {
+  if (!imageC || !fileIdC || !imageM || !fileIdM || !url) {
     return { error: "All fields are required ❌" };
   }
 
@@ -18,8 +20,10 @@ const url = formData.get("url") as string;
     await db.banner.create({
       data: {
         url,
-        image,
-        fileId,
+        imageC,
+        fileIdC,
+        imageM,
+        fileIdM,
       },
     });
 

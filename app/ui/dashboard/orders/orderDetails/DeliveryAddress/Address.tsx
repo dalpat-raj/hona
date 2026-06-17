@@ -11,11 +11,11 @@ const Addresses = ({address}: {address: Address | null}) => {
         </div>
         <div className='flex justify-start items-center gap-2 mb-1'>
             <p className='text-[14px] font-semibold text-gray-700'>Address:</p>
-            <p className='text-[14px] text-gray-600'>{address?.completeAddress}</p>
+            <p className='text-[14px] text-gray-600'>{address?.address}</p>
         </div>
         <div className='flex justify-start items-center gap-2 mb-1'>
             <p className='text-[14px] font-semibold text-gray-700'>Landmark:</p>
-            <p className='text-[14px] text-gray-600'>{address?.nearbyLandmark}</p>
+            <p className='text-[14px] text-gray-600'>{address?.landmark}</p>
         </div>
         <div className='flex justify-start items-center gap-2 mb-1'>
             <p className='text-[14px] font-semibold text-gray-700'>City:</p>

@@ -10,27 +10,27 @@ const Menu = () => {
     <div>
       <ul className="max-md:w-full max-md:h-screen max-md:bg-bga overflow-y-auto max-md:inline-block list-none max-md:absolute max-md:top-16 max-md:left-0 inline-flex cursor-pointer text-Blue">
         <div className="py-4 max-md:px-4">
-          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+          <li className={"mr-10 transition-all ease-out hover:scale-110 tracking-[3px] uppercase font-semibold text-sm text-blue"}>
             <Link href="/">Home</Link>
           </li>
         </div>
         <div className="flex justify-between items-center py-4 max-md:px-4">
-          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+          <li className={"mr-10 transition-all ease-out hover:scale-110 tracking-[3px] uppercase font-semibold text-sm text-blue"}>
             <Link href="/products">Products</Link>
           </li>
         </div>
         <div className="flex justify-between items-center py-4 max-md:px-4">
-          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+          <li className={"mr-10 transition-all ease-out hover:scale-110 tracking-[3px] uppercase font-semibold text-sm text-blue"}>
           <Link href="/pages/about-us">About Us</Link>  
           </li>
         </div>
         <div className="flex justify-between items-center py-4 max-md:px-4">
-          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+          <li className={"mr-10 transition-all ease-out hover:scale-110 tracking-[3px] uppercase font-semibold text-sm text-blue"}>
           <Link href="/pages/contact-us">Contact Us</Link>  
           </li>
         </div>
         <div className="flex justify-between items-center py-4 max-md:px-4">
-          <li className={"mr-10 transition-all ease-out hover:scale-110"}>
+          <li className={"mr-10 transition-all ease-out hover:scale-110 tracking-[3px] uppercase font-semibold text-sm text-blue"}>
             <Link href="/pages/blog">blog</Link>  
           </li>
         </div>

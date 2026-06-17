@@ -9,16 +9,18 @@ type StatusHistory = {
 
 const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
   const steps = [
-    { name: "Order Confirmed", date: "Thu, 18th Jul" },
-    { name: "pickup", date: "Sun, 21st Jul" },
-    { name: "shipped", date: "Fri, 19th Jul" },
-    { name: "delivered", date: "Sun, 21st Jul" },
+    { name: "CONFIRMED", date: "Thu, 18th Jul" },
+    { name: "PROCESSING", date: "Sun, 21st Jul" },
+    { name: "SHIPPED", date: "Fri, 19th Jul" },
+    { name: "PACKED", date: "Sun, 21st Jul" },
+    { name: "OUT_FOR_DELIVERY", date: "Sun, 21st Jul" },
+    { name: "DELIVERED", date: "Sun, 21st Jul" },
   ];
 
   const completedStatuses = statusHistory.map(history => history.status);
 
   return (
-    <div className="flex justify-between items-center max-sm:flex-col">
+    <div className="flex justify-between gap-4 items-center max-sm:flex-col">
       {steps.map((step, index) => {
         const isCompleted = completedStatuses.includes(step.name);
         const stepHistory = statusHistory.find(
@@ -30,7 +32,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
           <div key={index} className="flex-1 max-sm:hidden">
             <p
               className={`text-sm text-center mb-1 ${
-                isCompleted ? "text-green-600" : "text-gray-400"
+                isCompleted ? "text-green" : "text-blue"
               }`}
             >
               {step.name}
@@ -38,7 +40,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
             <div className="relative flex flex-col items-center">
               <div
                 className={`w-6 h-6 rounded-full ${
-                  isCompleted ? "bg-green-500" : "bg-gray-300"
+                  isCompleted ? "bg-green" : "bg-gray"
                 } flex items-center justify-center z-10`}
               >
                 {isCompleted && (
@@ -49,7 +51,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
               {index < steps.length - 1 && (
                 <div
                   className={`absolute left-[100%] top-3 w-full h-[2px] ${
-                    isCompleted ? "bg-green-500" : "bg-gray-300"
+                    isCompleted ? "bg-green" : "bg-gray-300"
                   } transform -translate-x-1/2`}
                 ></div>
               )}
@@ -58,7 +60,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
             <div className="text-center mt-2">
               <div
                 className={`text-xs ${
-                  isCompleted ? "text-green-600" : "text-gray-400"
+                  isCompleted ? "text-green" : "text-gray"
                 }`}
               >
                 {isCompleted && stepHistory
@@ -74,7 +76,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
           <div className="flex flex-col items-center w-1/4">
             <p
               className={`text-sm text-center mb-1 ${
-                isCompleted ? "text-green-600" : "text-gray-400"
+                isCompleted ? "text-green" : "text-gray"
               }`}
             >
               {step.name}
@@ -84,7 +86,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
           <div className="flex flex-col items-center w-1/4">
             <div
               className={`w-8 h-8 rounded-full ${
-                isCompleted ? "bg-green-500" : "bg-gray-300"
+                isCompleted ? "bg-green" : "bg-gray"
               } flex items-center justify-center z-10`}
             >
               {isCompleted && (
@@ -95,7 +97,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
             {index < steps.length - 1 && (
               <div
                 className={`w-[2px] h-16 ${
-                  isCompleted ? "bg-green-500" : "bg-gray-300"
+                  isCompleted ? "bg-green-500" : "bg-gray"
                 }`}
               ></div>
             )}
@@ -104,7 +106,7 @@ const OrderStatus: React.FC<StatusHistory[] | any> = ({statusHistory}) => {
           <div className="flex flex-col items-center w-1/4">
             <div
               className={`text-xs ${
-                isCompleted ? "text-green-600" : "text-gray-400"
+                isCompleted ? "text-green-600" : "text-gray"
               }`}
             >
               {isCompleted && stepHistory

@@ -1,37 +1,79 @@
-"use server"
-import { db } from "@/lib/db";
-import { UserOrders } from "@/lib/definations";
-import { revalidatePath } from 'next/cache';
+"use server";
 
+import { db } from "@/lib/db";
+import { OrderStatus } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { getShiprocketToken, requestPickup } from "@/lib/shiprocket";
 
 export async function orderStatusChange(formData: FormData) {
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
-    // const id = formData.get('id') as number | string;
-    // const status = formData.get('status') as string;
+  const id = formData.get("id") as string;
+  const status = formData.get("status") as OrderStatus;
 
-    // try {
-    //     if (!id || !status) {
-    //         throw new Error("Order ID and status are required");
-    //     }
+  try {
+    if (!id || !status) {
+      return {
+        error: "Order ID and Status are required",
+      };
+    }
 
-    //     const updatedOrder: UserOrders | any = await db.order.update({
-    //         where: { id: Number(id) },
-    //         data: { status },
-    //       });
+    const updatedOrder = await db.order.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+      },
+    });
+    if (status === "SHIPPED") {
+      const shipment = await db.shipment.findUnique({
+        where: {
+          orderId: String(id),
+        },
+      });
 
-    //       await db.statusHistory.create({
-    //         data: {
-    //             orderId: Number(id),
-    //             status,
-    //             changedAt: new Date(), 
-    //         },
-    //     });
+      if (shipment?.shipmentId) {
+        try {
+          const token = await getShiprocketToken();
 
-    //     revalidatePath(`/dashboard/orders/order-details/${id}`);
-    //     return {success: "Order Updated ✅"};
-          
-    // } catch (error) {
-    //     return {error: "Database Error Failed To Update Order ❌"}
-    // }
+          const pickupResponse = await requestPickup(
+            token,
+            shipment.shipmentId,
+          );
 
+          console.log("PICKUP_RESPONSE", pickupResponse);
+
+          await db.shipment.update({
+            where: {
+              orderId: String(id),
+            },
+            data: {
+              status: "READY_TO_SHIP",
+            },
+          });
+        } catch (error) {
+          console.error("PICKUP_ERROR", error);
+        }
+      }
+    }
+
+    await db.orderStatusHistory.create({
+      data: {
+        orderId: id,
+        status,
+        note: `Order status changed to ${status}`,
+      },
+    });
+
+    revalidatePath(`/dashboard/orders/${id}`);
+
+    return {
+      success: "Order Updated ✅",
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      error: "Database Error Failed To Update Order ❌",
+    };
+  }
 }

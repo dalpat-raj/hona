@@ -16,7 +16,7 @@ const NavLinks = () => {
           className={clsx(
             "flex justify-start gap-2 items-center text-white text-[14px] transition duration-100 ease-in-out delay-100",
             {
-              "text-[18px] text-white font-semibold py-1 rounded-br-[90px] rounded-tl-[80px] transition duration-100 ease-in-out delay-100":
+              "text-[18px] text-white bg-[#4F46E5] font-semibold py-1 pl-2 rounded-tl-[10px] rounded-bl-[10px] transition duration-100 ease-in-out delay-100":
                 pathname == item?.url,
             },
           )}

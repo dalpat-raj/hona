@@ -36,7 +36,7 @@ const Products = async () => {
     <div className="w-full py-8 max-sm:py-6 px-12 max-md:px-4 max-sm:px-2">
       <div className="flex justify-between items-center mb-8 max-sm:mb-4">
         <h2
-          className={` text-blue text-[28px] font-bold max-sm:text-[24px]`}
+          className={` text-sm text-center uppercase tracking-[4px]  font-semibold text-blue`}
         >
           Our Products
         </h2>

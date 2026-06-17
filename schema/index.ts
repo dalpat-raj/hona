@@ -72,7 +72,7 @@ export const UpdateAddressSchema = z.object({
 });
 
 export const addressSchema = z.object({
-  // email: z.string().email("Invalid email format"),
+  email: z.string().email("Invalid email format"),
   country: z.string().min(1, "Country/Region is required"),
   name: z.string().min(1, "Full Name is required"),
   address: z.string().min(1, "Complete Address is required"),
@@ -83,12 +83,12 @@ export const addressSchema = z.object({
     .string()
     .length(6, "PIN Code must be exactly 6 digits")
     .regex(/^\d+$/, "Pin code must be a valid 6-digit number"),
-  // phone: z
-  //   .string()
-  //   .length(10, "Phone number must be exactly 10 digits")
-  //   .regex(/^\d+$/, "Phone number must be numeric"),
+  phone: z
+    .string()
+    .length(10, "Phone number must be exactly 10 digits")
+    .regex(/^\d+$/, "Phone number must be numeric"),
   saveAddress: z.boolean().optional(),
-  paymentMethod: z.enum(["pay", "cash"], {
+  paymentMethod: z.enum(["RAZORPAY", "COD"], {
     errorMap: () => ({ message: "Payment method is required" }),
   }),
 });
@@ -224,4 +224,56 @@ export const EventCreateSchema = z.object({
         message: "Invalid date format. Please use YYYY-MM-DD.",
       },
     ),
+});
+
+
+export const blogSchema = z.object({
+  title: z
+    .string()
+    .min(10, "Title at least 10 characters ka hona chahiye")
+    .max(150, "Title 150 characters se zyada nahi hona chahiye"),
+
+  shortDescription: z
+    .string()
+    .min(50, "Short description kam se kam 50 characters ka ho")
+    .max(300),
+
+  content: z
+    .string()
+    .min(200, "Blog content kam se kam 200 characters ka hona chahiye"),
+
+  author: z.string().min(3),
+
+  category: z.enum([
+    "Atta Chakki",
+    "Grinder Shell",
+    "Maintenance",
+    "Buying Guide",
+    "Business Tips"
+  ]),
+
+  seoTitle: z
+    .string()
+    .max(60, "SEO title 60 characters ke andar ho")
+    .optional(),
+
+  seoDescription: z
+    .string()
+    .max(160, "SEO description 160 characters ke andar ho")
+    .optional(),
+
+  readingTime: z
+    .number()
+    .min(1)
+    .max(30)
+    .optional(),
+
+  faq: z
+    .array(
+      z.object({
+        question: z.string().min(10),
+        answer: z.string().min(20),
+      })
+    )
+    .optional(),
 });

@@ -15,7 +15,7 @@ const ButtonWithSpinner: React.FC<ButtonWithSpinnerProps> = ({
   return (
     <button
       type="submit"
-      className={`w-full h-full text-[14px] font-semibold bg-btn text-white flex items-center justify-center rounded`}
+      className={`w-full h-full text-[14px] font-semibold bg-btnb text-white flex items-center justify-center rounded`}
       disabled={loading}
     >
       {loading ? <Spinner /> : children}

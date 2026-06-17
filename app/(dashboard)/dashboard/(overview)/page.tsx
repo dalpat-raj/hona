@@ -7,7 +7,7 @@ import { ChartOrderWrapper } from '@/app/ui/dashboard/overView/RingWrapper';
 
 
 const page = () => (
-  <main className='h-full bg-bga  p-4 mt-4 overflow-scroll no-scrollbar'>
+  <main className='h-full bg-white rounded-md  p-4 mt-4 overflow-scroll no-scrollbar'>
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <CardWrapper />
     </div>

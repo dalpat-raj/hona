@@ -6,12 +6,13 @@ import { AiOutlineDelete } from "react-icons/ai";
 type Props = {
   product: Product;
   handleDelete: any;
+  key: any;
 };
 
-const ProductsCard = ({ product, handleDelete }: Props) => {
+const ProductsCard = ({ product, handleDelete, key }: Props) => {
 
   return (
-      <div className="shadow-custom-shadow rounded-xl my-2 p-2 bg-white">
+      <div className=" rounded-xl my-2 p-2 bg-white" key={key}>
         {product?.variants.map((item, i) => (
           <div className="mb-4 grid grid-cols-9 items-center gap-2 max-sm:grid-cols-4">
             <div className="col-span-3 max-sm:hidden">

@@ -50,8 +50,8 @@ export type UserProfile = {
   address: {
     id: number;
     userId: string | null;
-    completeAddress: string;
-    nearbyLandmark: string;
+    address: string;
+    landmark: string;
     city: string;
     state: string;
     pinCode: string;
@@ -171,7 +171,7 @@ export interface Review {
   name: string;
   email: string;
   message: string;
-  images: ReviewImages[];
+  images?: ReviewImages[];
   productId: string;
   rating: number;
   createdAt: Date;
@@ -264,48 +264,144 @@ export interface Items {
 }
 
 export interface UserOrders {
-  id: number;
-  subTotal: number | null;
-  shippingCharge: number | null;
+  id: string;
+  orderNumber: string;
+  userId: string;
+  addressId: string;
+  razorpayOrderId: string;
+
+  subtotal: number;
+  shippingCharge: number;
   totalAmount: number;
-  discountPrice: number | null;
-  status: string;
-  paymentInfoId: number | null;
-  userId: string | null;
-  createdAt: Date;
-  deliverAt: Date;
-  statusHistory:
-    | Array<{
-        id: number;
-        orderId: number;
-        status: string;
-        changedAt: Date;
-      }>
-    | [];
-  items: Array<{
-    id: number;
-    orderId: number;
-    productId: number;
-    title: string;
+  discountAmount?: number;
+  couponCode?: string;
+  couponDiscount?: number;
+  cancelReason?: string;
+  cancelledAt?: Date;
+  status:
+    | "PENDING"
+    | "CONFIRMED"
+    | "PROCESSING"
+    | "PACKED"
+    | "SHIPPED"
+    | "OUT_FOR_DELIVERY"
+    | "DELIVERED"
+    | "CANCELLED"
+    | "RETURNED"
+    | "REFUNDED";
+
+  paymentStatus:
+    | "PENDING"
+    | "PAID"
+    | "FAILED"
+    | "REFUNDED";
+
+  paymentMethod:
+    | "RAZORPAY"
+    | "PHONEPE"
+    | "CASHFREE"
+    | "COD";
+
+  createdAt: string;
+  updatedAt: string;
+
+  statusHistory: {
+    id: string;
+    orderId: string;
+    status: string;
+    note: string | null;
+    createdAt: string;
+  }[];
+
+  items: {
+    id: string;
+    orderId: string;
+    productId: string;
+    variantId: string;
+
+    productName: string;
+    productImage?: string | null;
+
+    sku: string;
     price: number;
-    stock: number;
-    modelNumber: string;
-    image: string;
-    color: string;
-    brand: string;
-    rating: number;
     quantity: number;
-  }>;
+
+    length: number | null;
+    breadth: number | null;
+    height: number | null;
+    weight: number | null;
+
+    total: number;
+    createdAt: string;
+
+    variant: {
+      id: string;
+      sku: string;
+      modelNumber: string | null;
+      capacity: string | null;
+      power: string | null;
+      color: string | null;
+
+      originalPrice: number;
+      sellingPrice: number;
+      stock: number;
+
+      length: number | null;
+      breadth: number | null;
+      height: number | null;
+      weight: number | null;
+
+      productId: string;
+
+      shiprocketProductId: string | null;
+      shiprocketVariantId: string | null;
+
+      createdAt: string;
+
+      images: {
+        id: string;
+        url: string;
+        fileId: string | null;
+        variantId: string;
+      }[];
+
+      product: {
+        id: string;
+        title: string;
+        slug: string;
+        description: string | null;
+        collection: string | null;
+        brand: string | null;
+        ratings: number;
+        feature: string[];
+        createdAt: string;
+        updatedAt: string;
+      };
+    };
+  }[];
+
   user: {
     id: string;
+    phone: string;
     name: string | null;
-    email: string;
-    password: string | null;
-    image: string | null;
-    role: string | null;
-    createdAt: Date;
-    addressId: number | null;
+    email: string | null;
+    role: "ADMIN" | "USER";
+    createdAt: string;
+    updatedAt: string;
   } | null;
+
+  address: {
+    id: string;
+    userId: string;
+    addressType: string | null;
+    pinCode: string;
+    city: string;
+    state: string;
+    country: string;
+    address: string;
+    landmark: string | null;
+    isDefault: boolean;
+  };
 }
 
 export type OrderSingleItem = {
@@ -398,6 +494,18 @@ export interface BannerData {
   image: string;
   url: string;
   fileId: string;
+}
+
+export interface BlogsData {
+  id: string;
+  title: string;
+  author: string;
+  shortDescription: string;
+  content: string;
+  category: string;
+  image: string;
+  fileId: string;
+  createdAt: Date;
 }
 
 type ImageItem = {

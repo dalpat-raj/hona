@@ -36,7 +36,7 @@ export default function SignInForm() {
     useState<ConfirmationResult | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const [isPending, startTransition] = useTransition();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -47,79 +47,125 @@ export default function SignInForm() {
   }, [resendCountDown]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window !== "undefined") {
+      if (!(window as any).recaptchaVerifier) {
+        (window as any).recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          { size: "invisible" },
+        );
+      }
 
-    if ((window as any).recaptchaVerifier) {
       setRecaptchVerifier((window as any).recaptchaVerifier);
-      return;
     }
+  }, []);
 
-    const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-      size: "invisible",
-    });
-
-    (window as any).recaptchaVerifier = verifier;
-    setRecaptchVerifier(verifier);
+  useEffect(() => {
+    return () => {
+      try {
+        (window as any).recaptchaVerifier?.clear();
+      } catch {}
+    };
   }, []);
 
   const verifyOtp = async () => {
     if (isVerifying) return;
+    if (!/^\d{6}$/.test(otp)) {
+      setError("Enter a valid 6-digit OTP");
+      return;
+    }
     if (!confirmationResult) {
       setError("Please request OTP first");
       return;
     }
     setIsVerifying(true);
 
-    startTransition(async () => {
-      try {
-        const result = await confirmationResult.confirm(otp);
-        const token = await result.user.getIdToken(true);
+    try {
+      const result = await confirmationResult.confirm(otp);
+      const token = await result.user.getIdToken(true);
 
-        await fetch("/api/auth/verify", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ token }),
-        });
-        toast.success("Login successful 🎉");
-        router.refresh();
-        router.back();
-      } catch (err) {
-        setError("OTP failed");
-      } finally {
-        setIsVerifying(false);
+      await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ token }),
+      });
+      sessionStorage.removeItem("otpSent");
+      toast.success("Login successful 🎉");
+      router.refresh();
+      router.back();
+    } catch (err: any) {
+      switch (err.code) {
+        case "auth/invalid-verification-code":
+          setError("Invalid OTP");
+          break;
+
+        case "auth/code-expired":
+          setError("OTP expired");
+          break;
+
+        default:
+          setError(err.message || "OTP verification failed");
       }
-    });
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const requestOtp = async (e?: FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
+    if (resendCountDown > 0) {
+      return;
+    }
 
     setError("");
     setSuccess("");
+    const digits = phoneNumber.replace("+91", "");
+
+    if (!/^\d{10}$/.test(digits)) {
+      setError("Enter a valid 10-digit mobile number");
+      return;
+    }
     setResendCountDown(60);
 
-    startTransition(async () => {
-      if (!recaptchaVerifier) {
-        return setError("RecaptchaVerifier is not initialized.");
-      }
+    if (!recaptchaVerifier) {
+      setError("RecaptchaVerifier is not initialized.");
+      return;
+    }
 
-      try {
-        const confirmationResult = await signInWithPhoneNumber(
-          auth,
-          phoneNumber,
-          recaptchaVerifier,
-        );
+    setLoading(true);
 
-        setConfirmationResult(confirmationResult);
-        setSuccess("OTP sent successfully");
-      } catch (err: any) {
-        setResendCountDown(0);
-        setError("Something went wrong");
+    try {
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        recaptchaVerifier,
+      );
+
+      sessionStorage.setItem("otpSent", "true");
+      setResendCountDown(60);
+      setConfirmationResult(confirmationResult);
+      setSuccess("OTP sent successfully");
+    } catch (err: any) {
+      setResendCountDown(0);
+
+      switch (err.code) {
+        case "auth/invalid-phone-number":
+          setError("Invalid phone number");
+          break;
+
+        case "auth/too-many-requests":
+          setError("Too many attempts. Try later.");
+          break;
+
+        default:
+          setError(err.message || "Failed to send OTP");
       }
-    });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -134,7 +180,7 @@ export default function SignInForm() {
         </p>
       </div>
       {!confirmationResult && (
-        <form onSubmit={requestOtp}>
+        <form>
           <div className="flex gap-2">
             <div className="flex items-center px-3 border bg-white rounded-md bg-gray-100 text-sm">
               +91
@@ -185,17 +231,20 @@ export default function SignInForm() {
       <div className="flex justify-start items-center gap-4 max-sm:gap-6 py-4">
         <input type="checkbox" className="scale-150" />
         <p className="text-[13px]">
-          By continuing you agree that. you have read and accupt Shiprocket's T&C and Privacy Policy.
+          By continuing you agree that. you have read and accupt Shiprocket's
+          T&C and Privacy Policy.
         </p>
       </div>
       <Button
         disabled={
-          isPending ||
+          loading ||
           isVerifying ||
           (!confirmationResult && resendCountDown > 0) ||
           (confirmationResult && otp.length !== 6)
         }
         onClick={() => {
+          if (loading || isVerifying) return;
+
           if (confirmationResult) {
             verifyOtp();
           } else {
@@ -208,7 +257,7 @@ export default function SignInForm() {
       >
         {isVerifying
           ? "Verifying..."
-          : isPending
+          : loading
             ? "Sending OTP..."
             : confirmationResult
               ? "Verify OTP"
@@ -237,7 +286,7 @@ export default function SignInForm() {
 
       <div id="recaptcha-container" />
 
-      {isPending && <Spinner />}
+      {loading && <Spinner />}
     </div>
   );
 }

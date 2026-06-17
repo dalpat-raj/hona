@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import logo from "../../../public/logo.png"
+import { Input } from "@/components/ui/input";
 
 const Footer = () => {
   return (
-    <div className="w-full px-24 max-lg:px-12 max-md:px-4 max-sm:px-2 bg-bga border-t-green">
+    <div className="w-full px-24 max-lg:px-12 max-md:px-4 max-sm:px-2 bg-white border-t-[1px] border-gray-400">
       <div className="py-12 max-sm:py-4 grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-8 text-green-600 max-sm:hidden">
         <div>
           <div className="w-[180px] max-sm:w-[140px] ">
@@ -40,7 +41,7 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="text-blue text-[17px] pb-2 font-semibold ">Quick Links</h2>
+          <h2 className="tracking-[3px] uppercase font-bold text-sm text-blue">Quick Links</h2>
           <ul>
             <li className="list-none py-1 text-[14px] font-normal transition-all hover:text-[16px] hover:font-bold">
               <Link href={"/pages/about-us"}>About Us</Link>
@@ -67,7 +68,7 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="text-blue text-[17px] pb-2 font-semibold ">Contact</h2>
+          <h2 className="tracking-[3px] uppercase font-bold text-sm text-blue">Contact</h2>
           <ul>
             <li className="list-none py-1 text-[14px] font-normal">
               Entity Of Mukesh Kumar
@@ -88,7 +89,7 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="text-blue text-[17px] pb-2 font-semibold ">Sign up and save</h2>
+          <h2 className="tracking-[3px] uppercase font-bold text-sm text-blue ">Sign up and save</h2>
           <li className="list-none py-1 text-[14px] font-normal">
             Subscribe to get special offers, free giveaways, and
             once-in-a-lifetime deals.
@@ -97,7 +98,7 @@ const Footer = () => {
             <input
               type="text"
               placeholder="Enter your email"
-              className="w-full border-green-300 text-white !bg-white py-2 pl-12"
+              className="w-full border-green-300 border-[1px] border-black py-2 pl-12"
             />
             <span className="absolute top-0 left-0 h-full w-10 flex items-center justify-center">
               <HiOutlineMailOpen size={20} />
@@ -110,8 +111,8 @@ const Footer = () => {
       <div className="hidden max-sm:block py-12 max-sm:py-4 text-white">
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="hover:no-underline text-blue">
-              <h6 className="text-[13px] uppercase font-extrabold">Company</h6>
+            <AccordionTrigger className="tracking-[2px] uppercase font-semibold text-sm text-blue">
+              <h6 className="">Company</h6>
             </AccordionTrigger>
             <AccordionContent>
               <div className="py-4 transition duration-500 ease-in opacity-100">
@@ -141,7 +142,7 @@ const Footer = () => {
 
           <AccordionItem value="item-2">
             <AccordionTrigger className="hover:no-underline text-blue">
-              <h6 className="text-[13px] uppercase font-extrabold">
+              <h6 className="tracking-[2px] uppercase font-semibold text-sm text-blue">
                 Need Help ?
               </h6>
             </AccordionTrigger>
@@ -171,7 +172,7 @@ const Footer = () => {
 
           <AccordionItem value="item-3">
             <AccordionTrigger className="hover:no-underline text-blue">
-              <h6 className="text-[13px] uppercase font-extrabold">Contact</h6>
+              <h6 className="tracking-[2px] uppercase font-semibold text-sm text-blue">Contact</h6>
             </AccordionTrigger>
             <AccordionContent>
               <div
@@ -200,7 +201,7 @@ const Footer = () => {
         </Accordion>
 
         <div className="my-4">
-          <h2 className="text-blue max-md:font-bold text-[17px] pb-2">Sign up and save</h2>
+          <h2 className="tracking-[2px] uppercase font-semibold text-sm text-blue">Sign up and save</h2>
           <li className="list-none py-1 text-[14px] font-normal max-md:text-black">
             Subscribe to get special offers, free giveaways, and
             once-in-a-lifetime deals.
@@ -209,7 +210,7 @@ const Footer = () => {
             <input
               type="text"
               placeholder="Enter your email"
-              className="w-full bg-white py-2 pl-12"
+              className="w-full border-green-300 border-[1px] border-black py-2 pl-12"
             />
             <span className="absolute top-0 left-0 h-full w-10 flex items-center justify-center text-blue">
               <HiOutlineMailOpen size={20} />
@@ -220,12 +221,12 @@ const Footer = () => {
 
       <div className="text-green-600 w-full flex items-center justify-center max-md:gap-4 gap-8 pb-8">
         <HiOutlineMailOpen size={25} className="cursor-pointer" />
-        <FiInstagram size={25} className="cursor-pointer" />
-        <CiTwitter size={25} className="cursor-pointer" />
-        <CiYoutube size={25} className="cursor-pointer" />
+        <FiInstagram size={25} className="cursor-pointer text-pink-600" />
+        <CiTwitter size={25} className="cursor-pointer text-[#0090bf]" />
+        <CiYoutube size={25} className="cursor-pointer text-red-600" />
       </div>
 
-      <div className="text-blue text-center py-8 border-t-[1px] border-gray-400 ">
+      <div className="text-center py-8 border-t-[1px] border-gray-400 tracking-[2px] uppercase font-semibold text-sm text-blue">
         <p>TheContrive.com Cover All Right Resevered</p>
       </div>
     </div>

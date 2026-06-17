@@ -77,7 +77,7 @@ const RevenueChart: React.FC<DataProps> = ({data}) => {
   };
 
   return (
-    <div className="bg-gray-100 p-6 rounded-lg">
+    <div className="bg-gray-100 p-6 rounded-lg border border-gray">
       <p className='text-[14px] font-semibold text-gray-400'>Total Revenue</p>
       <h2 className="text-[20px] font-bold mb-4 text-gray-800">
         INR {data?.reduce((total: any, item) => total + item?.totalRevenue, 0).toFixed(2)}

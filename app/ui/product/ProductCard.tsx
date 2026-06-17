@@ -10,13 +10,13 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ prod }) => {
-  // const discountPercentage =
-  //   prod.originalPrice && prod.sellingPrice
-  //     ? (
-  //         ((prod.originalPrice - prod.sellingPrice) / prod.originalPrice) *
-  //         100
-  //       ).toFixed(0)
-  //     : "0";
+  const discountPercentage =
+    prod.variants[0].originalPrice && prod.variants[0].sellingPrice
+      ? (
+          ((prod.variants[0].originalPrice - prod.variants[0].sellingPrice) / prod.variants[0].originalPrice) *
+          100
+        ).toFixed(0)
+      : "0";
   
   return (
     <Link href={`/products/${prod.slug}`} className="relative">
@@ -24,8 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ prod }) => {
 
       <div className="absolute -top-2 -right-2 uppercase bg-bgg px-2 py-1 rounded-md">
         <p className="text-white text-[13px] font-semibold tracking-tightest z-50">
-          Save 50%
-          {/* Save {discountPercentage}% */}
+          Save {discountPercentage}%
         </p>
       </div>
 

@@ -1,5 +1,4 @@
 import Profile from '@/app/ui/homePage/profile/Profile'
-export const dynamic = "force-dynamic";
 import { getCurrentUser } from "@/lib/auth";
 
 const page = async() => {

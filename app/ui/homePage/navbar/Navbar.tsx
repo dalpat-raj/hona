@@ -10,7 +10,7 @@ type Props = {};
 
 const Navbar = async (props: Props) => { 
   return (
-    <div className="sticky top-0 left-0 bg-mixag z-50">
+    <div className="sticky top-0 left-0 bg-white z-50 shadow-md">
       {/* <div className="h-15 max-sm:h-10 text-text_primary text-center py-2 max-sm:text-[13px] text-[15px]">
         <p>Offer</p>
       </div> */}

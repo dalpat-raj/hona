@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 
 import {
   Carousel,
@@ -22,26 +21,53 @@ export function CarouselHome({ banners }: { banners: BannerData[] }) {
       className="w-full"
     >
       <CarouselContent>
-        {banners?.map((item, index) => (
-          <CarouselItem key={index}>
-            <div className="w-full h-auto !bg-bga max-sm:h-[30vh] relative">
-              <Image
-                src={item.image}
-                alt={item.url}
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-              <div className="absolute bottom-6 left-[50%] transform translate-x-[-50%]">
-                <Link href={item.url}>
-                  <button className="bg-btn shadow-[0_10px_25px_rgba(29,179,159,0.4)] py-2 px-4 text-white font-semibold hover:scale-[1.03] hover:shadow-[0_15px_35px_rgba(29,179,159,0.6)]
-  transition-all duration-300">
+        {banners?.map((item) => (
+          <CarouselItem key={item.id}>
+            <Link href={item.url} className="block">
+              <div className="relative w-full overflow-hidden rounded-xl">
+                {/* Desktop Banner */}
+                <Image
+                  src={item.imageC}
+                  alt="Banner"
+                  width={1920}
+                  height={700}
+                  priority
+                  className="hidden md:block w-full h-auto object-cover"
+                />
+
+                {/* Mobile Banner */}
+                <Image
+                  src={item.imageM}
+                  alt="Banner"
+                  width={800}
+                  height={1200}
+                  className="block md:hidden w-full h-auto object-cover"
+                />
+
+                {/* Optional Overlay */}
+                <div className="absolute inset-0 bg-black/5" />
+
+                {/* CTA */}
+                <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2">
+                  <button
+                    className="
+                      bg-[#1db39f]
+                      text-white
+                      font-semibold
+                      px-5 py-2
+                      md:px-7 md:py-3
+                      rounded-full
+                      shadow-lg
+                      hover:scale-105
+                      transition-all
+                      duration-300
+                    "
+                  >
                     SHOP NOW
                   </button>
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           </CarouselItem>
         ))}
       </CarouselContent>

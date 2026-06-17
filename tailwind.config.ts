@@ -10,9 +10,10 @@ const config: Config = ({
     	extend: {
     		backgroundColor: {
     			bg: '#e9f4d6',
-				bga: '#f3fcff',
+				bga: '#fff',
 				bgg: '#1db39f',
 				blackOverlay:'rgba(0,0,0,0.7)',
+				blackOverlays:'rgba(0,0,0,0.1)',
     		},
     		boxShadow: {
     			'custom-shadow': '0px 0px 8px -2px rgba(0,0.9,0,0.66)',
@@ -21,7 +22,8 @@ const config: Config = ({
 			backgroundImage: {
 				mixag: "linear-gradient(to right, #f3fcff 50%, #1db39f 100%)",
 				mixgo: "linear-gradient(to right, #f59e0b 0%, #fde68a 0.1%, #1db39f 20%)",
-				btn: "linear-gradient(to right, #34d399, #1db39f, #0ea5a4)"
+				btn: "linear-gradient(to right, #34d399, #1db39f, #0ea5a4)",
+				btnb: "linear-gradient(90deg,#6366F1,#8B5CF6)"
 			},
     		colors: { 
 				green: "#1db39f",

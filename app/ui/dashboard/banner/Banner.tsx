@@ -29,7 +29,7 @@ const Banner = ({ banners }: Props) => {
         </h2>
         <button
           onClick={() => setOpen(!open)}
-          className="flex justify-center items-center gap-2 rounded-lg bg-bgg hover:bg-gray-800 text-white text-[14px] px-2 py-1"
+          className="flex justify-center items-center gap-2 rounded-lg bg-[#333] hover:bg-gray-800 text-white text-[14px] px-2 py-1"
         >
           <FaPlus size={16} />
           Add banner
@@ -43,7 +43,7 @@ const Banner = ({ banners }: Props) => {
             key={i}
           >
             <Image
-              src={item?.image}
+              src={item?.imageC}
               alt={item.url}
               width={0}
               height={0}

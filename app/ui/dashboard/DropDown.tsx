@@ -18,7 +18,7 @@ const DropDown = () => {
   return (
     <DropdownMenu>
     <DropdownMenuTrigger className='w-[33px] h-[33px] hidden max-md:block outline-none rounded-full absolute top-0 left-0 py-1 z-50'></DropdownMenuTrigger>
-    <DropdownMenuContent className='mr-8 px-2'>
+    <DropdownMenuContent className='mr-8 px-2 bg-[#111827]'>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {
@@ -27,7 +27,7 @@ const DropDown = () => {
                 return (
                     <DropdownMenuItem key={i}>
                     <Link href={item.url}>
-                    <div className={clsx("flex justify-start gap-4 items-center text-gray-500",{
+                    <div className={clsx("flex justify-start gap-4 items-center text-white",{
                         'text-[#ffc029] text-[16px] font-semibold': pathname === item.url
                     })}>
                         <div className='test-black'><LinkIcon size={20}/></div>

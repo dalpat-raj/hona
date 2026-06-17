@@ -3,7 +3,7 @@ import { OrderDetailsSkeleton } from '@/app/ui/skeletons';
 const OrderDetail = dynamic(()=>import("@/app/ui/dashboard/orders/orderDetails/OrderDetail"), {loading:()=><OrderDetailsSkeleton/>})
 
 
-const page = ({ params }: { params: { id: number } }) => {
+const page = ({ params }: { params: { id: string } }) => {
   const id = params.id;
   return (
       <OrderDetail id={id}/>

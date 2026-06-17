@@ -51,3 +51,26 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 export const getPrice = (product: Product) => {
   return product.variants?.[0]?.sellingPrice || 0;
 };
+
+
+export function normalizePhone(phone: string) {
+  // Sirf digits nikaal lo
+  const digits = phone.replace(/\D/g, "");
+
+  // Agar 10 digit hai to +91 laga do
+  if (digits.length === 10) {
+    return `+91${digits}`;
+  }
+
+  // Agar 91 se start ho raha hai (12 digit)
+  if (digits.length === 12 && digits.startsWith("91")) {
+    return `+${digits}`;
+  }
+
+  // Agar already +91 format me hai
+  if (phone.startsWith("+91") && digits.length === 12) {
+    return `+${digits}`;
+  }
+
+  throw new Error("Invalid Indian phone number");
+}

@@ -11,15 +11,14 @@ type Props = {
 }
 
 const OrderCard: React.FC<Props> = ({order}) => {
-  const [imageLoading, setImageLoading] = useState(true);
-  const image1 = order?.items[0]?.image;
-
-  const lastStatus = order?.statusHistory[order?.statusHistory.length - 1];
-
   
+  const [imageLoading, setImageLoading] = useState(true);
+  const image1 = order?.items[0]?.productImage;
+
+  const lastStatus = order?.statusHistory[order?.statusHistory?.length - 1];
   
   return (
-    <Link href={`/profile/orders/${order.id}`}>
+    <Link href={`/profile/orders/${order?.id}`}>
     <div className='w-full grid grid-cols-6 max-sm:grid-cols-1 gap-3 border border-gray-200 hover:shadow-custom-shadow max-sm:shadow-custom-shadow max-sm:border-0 rounded-xl mb-4 px-2 py-2'>
         <div className='col-span-3 max-sm:col-span-6 flex gap-2'>
           <div className='w-[70px]  h-[80px]'>
@@ -35,8 +34,8 @@ const OrderCard: React.FC<Props> = ({order}) => {
             />
           </div>
           <div>
-            <p className='text-[14px] text-gray-800'>{ order?.items[0]?.title.length > 30 ? order?.items[0]?.title.slice(0,30)+"..." : order?.items[0]?.title}</p>
-            <p className='text-[13px] text-gray-500'>color: {order?.items[0]?.color}</p>
+            <p className='text-[14px] text-gray-800'>{ order?.items[0]?.productName?.length > 30 ? order?.items[0]?.productName?.slice(0,30)+"..." : order?.items[0]?.productName}</p>
+            <p className='text-[13px] text-gray-500'>color: {order?.items[0]?.variant?.color}</p>
           </div>
         </div>
 
@@ -47,35 +46,42 @@ const OrderCard: React.FC<Props> = ({order}) => {
         <div  className="col-span-2 max-sm:col-span-6">
           <div>
             {
-              lastStatus.status === "Order Confirmed" && (
+              lastStatus?.status === "CONFIRMED" && (
                 <div>
-                  <p className='text-[14px] font-semibold text-gray-800'>Order Confirmed on {formatDate(lastStatus.changedAt)}</p>
+                  <p className='text-[14px] font-semibold text-blue'>Order Confirmed on {formatDate(lastStatus?.createdAt)}</p>
                   <p className='text-[12px] text-gray-500'>your order has been confirmed</p>
                 </div>
               )
             }
             {
-              lastStatus.status === "pickup" && (
+              lastStatus?.status === "PROCESSING" && (
                 <div>
-                  <p className='text-[14px] font-semibold text-gray-800'>Pickup on {formatDate(lastStatus.changedAt)}</p>
+                  <p className='text-[14px] font-semibold TEXT-BLUE'>PROCESSING on {formatDate(lastStatus?.createdAt)}</p>
                 </div>
               )
             }
             {
-              lastStatus.status === "shipped" && (
+              lastStatus?.status === "PACKED" && (
                 <div>
-                  <p className='text-[14px] font-semibold text-gray-800'>Order Confirmed on {formatDate(lastStatus.changedAt)}</p>
+                  <p className='text-[14px] font-semibold text-gray-800'>Order Packed on {formatDate(lastStatus?.createdAt)}</p>
+                </div>
+              )
+            }
+            {
+              lastStatus?.status === "SHIPPED" && (
+                <div>
+                  <p className='text-[14px] font-semibold text-gray-800'>Order Confirmed on {formatDate(lastStatus?.changedAt)}</p>
                   <p className='text-[12px] text-gray-500'>on the way</p>
                 </div>
               )
             }
             {
-              lastStatus.status === "delivered" && (
+              lastStatus?.status === "DELIVERED" && (
                 <div>
                   <div className='flex gap-2 items-center'>
                   <p className='w-3 h-3 bg-green-500 rounded-full'></p> 
                   <p className='text-[14px] font-semibold text-gray-800'>
-                    Delivered on {formatDate(lastStatus.changedAt)}
+                    Delivered on {formatDate(lastStatus?.createdAt)}
                   </p>
                   </div>
                   <p className='text-[12px] text-gray-500 py-2'>Your item has been delivered</p>
@@ -83,12 +89,12 @@ const OrderCard: React.FC<Props> = ({order}) => {
               )
             }
             {
-              lastStatus.status === "cancled" && (
+              lastStatus?.status === "CANCELLED" && (
                 <div>
                   <div className='flex gap-2 items-center'>
                   <p className='w-3 h-3 bg-red-500 rounded-full'></p> 
                   <p className='text-[14px] font-semibold text-gray-800'>
-                    Cancelled on {formatDate(lastStatus.changedAt)}
+                    Cancelled on {formatDate(lastStatus?.createdAt)}
                   </p>
                   </div>
                   <p className='text-[12px] text-gray-500'>As per your request, your item has been cancelled</p>

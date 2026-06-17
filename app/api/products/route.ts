@@ -15,11 +15,11 @@ export async function GET(request: Request) {
     const power = url.searchParams.get("power") || undefined;
     const brand = url.searchParams.get("brand") || undefined;
     const page = Math.max(1, parseInt(url.searchParams.get("page") || "1"));
+    
     const limit = Math.min(
       100,
       Math.max(1, parseInt(url.searchParams.get("limit") || "10")),
     );
-
     const sortBy = url.searchParams.get("sortBy") || "createdAt";
     const order = url.searchParams.get("order") || "desc";
 

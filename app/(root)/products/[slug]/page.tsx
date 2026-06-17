@@ -1,6 +1,7 @@
 import ProductUi from "@/app/ui/product/productDetails/ProductUi";
 import { getProductDetails } from "@/lib/data";
 
+
 interface PageProps {
   params: {slug: string };
 }
@@ -8,7 +9,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const {slug} = await params
-  
+    
   const product = await getProductDetails(slug);
 
   if ("error" in product) {

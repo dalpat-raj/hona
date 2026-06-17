@@ -1,9 +1,6 @@
-
 import { db } from "@/lib/db";
-import { FormData, Product} from "./definations";
-import { subMonths, format } from 'date-fns';
-
-
+import { FormData, Product } from "./definations";
+import { subMonths, format } from "date-fns";
 
 export const getUserByEmail = async (email: string) => {
   // try {
@@ -16,7 +13,7 @@ export const getUserByEmail = async (email: string) => {
 
 export const getUserById = async (id: string | undefined) => {
   try {
-    const user = await db.user.findUnique({where: {id}});
+    const user = await db.user.findUnique({ where: { id } });
     return user;
   } catch (error) {
     return null;
@@ -41,7 +38,6 @@ export async function logoutUser() {
     throw error;
   }
 }
-
 
 // export const getCurrentUserReviews = async () => {
 //   const session = await auth();
@@ -73,7 +69,7 @@ export async function getAllProducts() {
     return products;
   } catch (error) {
     console.error(error);
-    return []; 
+    return [];
   }
 }
 
@@ -81,7 +77,7 @@ export async function getProducts() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
     const products = await db.product.findMany({
-      include: { reviews: true, variants: {include: {images: true}} },
+      include: { reviews: true, variants: { include: { images: true } } },
       orderBy: { createdAt: "desc" },
       take: 8,
     });
@@ -98,7 +94,7 @@ export async function getProductDetails(slug: string) {
   try {
     const product = await db.product.findUnique({
       where: {
-        slug: slug, 
+        slug: slug,
       },
       include: {
         variants: {
@@ -129,8 +125,7 @@ export async function getProductDetails(slug: string) {
 
       return (
         bHasImages - aHasImages ||
-        new Date(b.createdAt).getTime() -
-          new Date(a.createdAt).getTime()
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     });
 
@@ -140,7 +135,13 @@ export async function getProductDetails(slug: string) {
   }
 }
 
-export async function editProducts({id,formData}: {id: number, formData: FormData}){
+export async function editProducts({
+  id,
+  formData,
+}: {
+  id: number;
+  formData: FormData;
+}) {
   // try {
   //   const updatedProduct = db.product.update({
   //     where: { id: Number(id) },
@@ -161,23 +162,20 @@ export async function editProducts({id,formData}: {id: number, formData: FormDat
   //       depth: formData.dimension?.depth,
   //     },
   //   });
-
   //   const data = await Promise.all([
   //     updatedProduct,
   //   ]);
-    
   //   return data
-    
   // } catch (error) {
   //   console.error('Error updating product:', error);
-  // } 
+  // }
 }
 
-export async function getCollections(){
+export async function getCollections() {
   try {
-    const collections = await db.collection.findMany()
-    if(!collections) throw new Error("Something went wrong plasea retry")
-    return collections
+    const collections = await db.collection.findMany();
+    if (!collections) throw new Error("Something went wrong plasea retry");
+    return collections;
   } catch (error) {
     console.error("Error fetching collections:", error);
     throw new Error("Failed to fetch collections");
@@ -190,7 +188,7 @@ export async function getProductByCollection(titles: string) {
     where: {
       collection: titles, // Filter by collection
     },
-    include:{
+    include: {
       reviews: true,
     },
     take: 10,
@@ -198,10 +196,9 @@ export async function getProductByCollection(titles: string) {
   return products;
 }
 
-
 export async function FetchSimilarProducts(
   collection: string | undefined,
-  currentProductId?: string
+  currentProductId?: string,
 ) {
   try {
     const products = await db.product.findMany({
@@ -229,127 +226,130 @@ export async function FetchSimilarProducts(
   }
 }
 
-
 export async function getCustomers() {
   try {
-
     const customers = await db.user.findMany({
       include: {
         _count: {
-          select: { orders: true }, 
+          select: { orders: true },
         },
       },
       orderBy: {
         orders: {
-          _count: "desc", 
+          _count: "desc",
         },
       },
-      take: 32, 
+      take: 32,
     });
 
     return customers;
-
   } catch (error) {
     console.error("Error fetching customers:", error);
     throw new Error("Failed to fetch customers");
   }
 }
 
-export async function getMyOrders(id: string){
+export async function getMyOrders(id: string) {
+  
   await new Promise((resolve) => setTimeout(resolve, 100));
   try {
     const orders = await db.order.findMany({
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
-      where: {userId: id},
+      where: { userId: id },
       include: {
         statusHistory: true,
-        items: true,
-        user: true,
-      }
-    })
+        items: {
+          include: {
+            variant: true,
+          }
+        },
+        user:true,        
+      },
+    });
 
-    if(!orders) throw new Error("Something went wrong plasea retry")
+    // if (!orders) throw new Error("Something went wrong plasea retry");
 
-    return orders
+    return orders;
   } catch (error) {
     throw new Error("Failed to fetch orders");
   }
 }
 
-export async function getOrderDetails(id: number) {
-  // await new Promise((resolve) => setTimeout(resolve, 2000));
-  // try {
-  //   const order = await db.order.findUnique({
-  //     where: {
-  //       id: Number(id),
-  //     }, 
-  //     include: {
-  //       statusHistory: true, 
-  //       items: true,        
-  //       user: true,
-  //     }
-  //   });
-
-  //   const address = await db.address.findUnique({
-  //     where: {
-  //       id: Number(order?.user?.addressId),
-  //     }
-  //   })
-    
-
-  //   return {
-  //     order,
-  //     address
-  //   }
-
-  // } catch (error) {
-  //   console.error("Error fetching orders:", error);
-  //   throw new Error("Failed to fetch orders");
-  // }
-}
-
-
-export async function getReviews(){
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-    try {
-      const reviews = await db.review.findMany({
-        orderBy: {
-          createdAt: 'desc',
+export async function getOrderDetails(id: string) {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  try {
+    const order = await db.order.findUnique({
+  where: {
+    id,
+  },
+  include: {
+    statusHistory: true,
+    shipment: true,
+    payment: true,
+    user: true,
+    address: true,
+    items: {
+      include: {
+        variant: {
+          include: {
+            images: true,
+            product: true,
+          },
         },
-        take: 6,
-        include: {
-          images: true
-        }
-      })
-      
-      return reviews;
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-      throw new Error("Failed to fetch reviews");
-    }
+      },
+    },
+  },
+});
+
+    return {
+      order,
+    };
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw new Error("Failed to fetch orders");
+  }
 }
 
-
-export async function getAdminCollctions(){
+export async function getReviews() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
-    const collections = await db.collection.findMany()
-    
-    if(!collections) throw new Error("Fiailed to fetch Collction!")
+    const reviews = await db.review.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 6,
+      include: {
+        images: true,
+      },
+    });
+
+    return reviews;
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    throw new Error("Failed to fetch reviews");
+  }
+}
+
+export async function getAdminCollctions() {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+  try {
+    const collections = await db.collection.findMany();
+
+    if (!collections) throw new Error("Fiailed to fetch Collction!");
     return collections;
   } catch (error) {
     console.error("Error fetching brands:", error);
     throw new Error("Failed to fetch brands");
   }
 }
-export async function getAdminBrands(){
+export async function getAdminBrands() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
-    const brands = await db.brand.findMany()
-    
-    if(!brands) throw new Error("Fiailed to fetch Brand!")
+    const brands = await db.brand.findMany();
+
+    if (!brands) throw new Error("Fiailed to fetch Brand!");
     return brands;
   } catch (error) {
     console.error("Error fetching brands:", error);
@@ -357,32 +357,31 @@ export async function getAdminBrands(){
   }
 }
 
-export async function getEvents(){
+export async function getEvents() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
-      const events = await db.event.findMany({
-        orderBy: {
-          createdAt: 'desc',
+    const events = await db.event.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        products: {
+          include: {
+            product: true,
+          },
         },
-        include:{
-          products: {
-            include: {
-              product: true,
-            }
-          }
-        }
-      })
+      },
+    });
 
-      if(!events){
-        throw new Error("User does not exists");
-      }
+    if (!events) {
+      throw new Error("User does not exists");
+    }
 
     return events;
   } catch (error) {
     console.error("events does not exists:", error);
     throw new Error("events does not exists");
-  } 
-  
+  }
 }
 
 export async function getEventRunning() {
@@ -419,50 +418,47 @@ export async function getEventRunning() {
   }
 }
 
-export async function getCoupons(){
+export async function getCoupons() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
-      const coupons = await db.coupon.findMany({
-        orderBy: {
-          createdAt: 'desc',
-        },
-      })
+    const coupons = await db.coupon.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-      if(!coupons){
-        throw new Error("no coupon founds");
-      }
+    if (!coupons) {
+      throw new Error("no coupon founds");
+    }
 
     return coupons;
   } catch (error) {
     console.error("coupon does not exists:", error);
     throw new Error("coupons does not exists");
-  } 
+  }
 }
 
-export async function deactivateCoupons(){
+export async function deactivateCoupons() {
   try {
     const currentDate = new Date();
 
     const result = await db.coupon.updateMany({
       where: {
         expirationDate: {
-          lt: currentDate, 
+          lt: currentDate,
         },
       },
       data: {
-        isActive: false, 
+        isActive: false,
       },
     });
-
-
 
     return "coupons";
   } catch (error) {
     console.error("coupon does not exists:", error);
     throw new Error("coupons does not exists");
-  } 
+  }
 }
-
 
 export async function getBanner() {
   try {
@@ -471,111 +467,140 @@ export async function getBanner() {
         createdAt: "desc",
       },
     });
-    
-    return {data: banners}; // ✅ always return array
+
+    return { data: banners }; // ✅ always return array
   } catch (error) {
-   return { data: [], error: "Failed to fetch products" };
+    return { data: [], error: "Failed to fetch products" };
   }
 }
-export async function getBannerForHome(){
+
+export async function getFirstBlog() {
+  try {
+    const latestBlog = await db.blog.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return { data: latestBlog }; // ✅ always return array
+  } catch (error) {
+    return { data: [], error: "Failed to fetch blogs" };
+  }
+}
+
+export async function getBlog() {
+  try {
+    const blogs = await db.blog.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return { data: blogs }; // ✅ always return array
+  } catch (error) {
+    return { data: [], error: "Failed to fetch blogs" };
+  }
+}
+export async function getBlogDetails(id: any) {
+  try {
+    const blog = await db.blog.findUnique({
+      where: { id: id },
+    });
+
+    return blog;
+  } catch (error) {
+    return { data: [], error: "Failed to fetch blog" };
+  }
+}
+
+export async function getBannerForHome() {
   try {
     const banners = await db.banner.findMany({
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
       take: 5,
-    })
-    return {data: banners}
-    
+    });
+    return { data: banners };
   } catch (error) {
     return { data: [], error: "no banner founds" };
   }
 }
 
-
-
-// dashboard 
+// dashboard
 export async function fetchCardData() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
-    try {
-      const totalProductsPromiss = db.product.count()
-      const totalCustomersPromiss = db.user.count()
-      const totalOrdersPromiss = db.order.count()
-  
-      const data = await Promise.all([
-        totalProductsPromiss,
-        totalCustomersPromiss,
-        totalOrdersPromiss,
-      ]);
-      
-      const totalProducts = Number(data[0] ?? '0');
-      const totalCustomers = Number(data[1] ?? '0');
-      const totalOrders = Number(data[2] ?? '0');
-      
-      return {
-        totalProducts,
-        totalCustomers,
-        totalOrders
-      };
-    } catch (error) {
-      // console.error('Database Error:', error);
-      // throw new Error('Failed to fetch card data.');
-    }
+  try {
+    const totalProductsPromiss = db.product.count();
+    const totalCustomersPromiss = db.user.count();
+    const totalOrdersPromiss = db.order.count();
+
+    const data = await Promise.all([
+      totalProductsPromiss,
+      totalCustomersPromiss,
+      totalOrdersPromiss,
+    ]);
+
+    const totalProducts = Number(data[0] ?? "0");
+    const totalCustomers = Number(data[1] ?? "0");
+    const totalOrders = Number(data[2] ?? "0");
+
+    return {
+      totalProducts,
+      totalCustomers,
+      totalOrders,
+    };
+  } catch (error) {
+    // console.error('Database Error:', error);
+    // throw new Error('Failed to fetch card data.');
+  }
 }
 
 export async function OrderCountAdmin() {
-//   await new Promise((resolve) => setTimeout(resolve, 2000));
-//   try {
-//     const totalConfirmPromiss = db.order.count({where: { status: 'Order Confirmed' }})
-//     const totalPickupPromiss = db.order.count({where: { status: 'pickup' }})
-//     const totalShippedPromiss = db.order.count({where: { status: 'shipped' }})
-//     const totalDeliverdPromiss = db.order.count({where: { status: 'delivered' }})
-//     const totalCnacledPromiss = db.order.count({where: { status: 'cancled' }})
-//     const totalRefuncPromiss = db.order.count({where: { status: 'refunded' }})
-
-
-//     const data = await Promise.all([
-//       totalConfirmPromiss,
-//       totalPickupPromiss,
-//       totalShippedPromiss,
-//       totalDeliverdPromiss,
-//       totalCnacledPromiss,
-//       totalRefuncPromiss,
-//     ]);
-    
-
-    
-//     const totalConfirm = Number(data[0] ?? '0');
-//     const totalPickup = Number(data[1] ?? '0');
-//     const totalShipped = Number(data[2] ?? '0');
-//     const totalDelivered = Number(data[3] ?? '0');
-//     const totalCancled = Number(data[4] ?? '0');
-//     const totalRefunded = Number(data[5] ?? '0');
-    
-//     return {
-//       totalConfirm,
-//       totalPickup,
-//       totalShipped,
-//       totalDelivered,
-//       totalCancled,
-//       totalRefunded,
-//     };
-//   } catch (error) {
-//     return ({error: 'Failed to fetch card data.'})
-//   }
- }
+  //   await new Promise((resolve) => setTimeout(resolve, 2000));
+  //   try {
+  //     const totalConfirmPromiss = db.order.count({where: { status: 'Order Confirmed' }})
+  //     const totalPickupPromiss = db.order.count({where: { status: 'pickup' }})
+  //     const totalShippedPromiss = db.order.count({where: { status: 'shipped' }})
+  //     const totalDeliverdPromiss = db.order.count({where: { status: 'delivered' }})
+  //     const totalCnacledPromiss = db.order.count({where: { status: 'cancled' }})
+  //     const totalRefuncPromiss = db.order.count({where: { status: 'refunded' }})
+  //     const data = await Promise.all([
+  //       totalConfirmPromiss,
+  //       totalPickupPromiss,
+  //       totalShippedPromiss,
+  //       totalDeliverdPromiss,
+  //       totalCnacledPromiss,
+  //       totalRefuncPromiss,
+  //     ]);
+  //     const totalConfirm = Number(data[0] ?? '0');
+  //     const totalPickup = Number(data[1] ?? '0');
+  //     const totalShipped = Number(data[2] ?? '0');
+  //     const totalDelivered = Number(data[3] ?? '0');
+  //     const totalCancled = Number(data[4] ?? '0');
+  //     const totalRefunded = Number(data[5] ?? '0');
+  //     return {
+  //       totalConfirm,
+  //       totalPickup,
+  //       totalShipped,
+  //       totalDelivered,
+  //       totalCancled,
+  //       totalRefunded,
+  //     };
+  //   } catch (error) {
+  //     return ({error: 'Failed to fetch card data.'})
+  //   }
+}
 
 export async function getMonthlyRevenueLast12Months() {
   // await new Promise((resolve) => setTimeout(resolve, 3000));
   // const twelveMonthsAgo = subMonths(new Date(), 12);
   // const now = new Date();
-
   // // Generate an array of months for the last 12 months
   // const months = Array.from({ length: 12 }, (_, i) => {
   //   const month = subMonths(now, i);
   //   return format(month, 'yyyy-MM');
   // }).reverse(); // Reverse to start from the oldest month
-
   // const orders = await db.order.findMany({
   //   where: {
   //     status: 'delivered',
@@ -584,10 +609,8 @@ export async function getMonthlyRevenueLast12Months() {
   //     },
   //   },
   // });
-
   // // Initialize revenue data
   // const revenueData = months.map(month => ({ month, totalRevenue: 0 }));
-
   // // Calculate total revenue for each month
   // orders.forEach(order => {
   //   const orderMonth = format(order.deliverAt, 'yyyy-MM');
@@ -596,6 +619,5 @@ export async function getMonthlyRevenueLast12Months() {
   //     monthData.totalRevenue += order.totalAmount;
   //   }
   // });
-
   // return revenueData;
 }

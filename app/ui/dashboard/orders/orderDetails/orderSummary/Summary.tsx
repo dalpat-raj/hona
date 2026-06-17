@@ -15,12 +15,12 @@ const Summary: React.FC<Props> = ({order}) => {
         <h2 className='text-[16px] font-bold text-gray-800'>Order Summary</h2>
         <div  className={clsx(
         "text-[14px] col-span-1 text-gray-600",
-        order?.status === "confirmed" && "text-[14px] font-semibold",   
-        order?.status === "pickup" && "text-[14px] font-semibold",   
-        order?.status === "shipped" && "text-[14px] font-semibold",   
-        order?.status === "delivered" && "text-[14px] font-semibold text-green-800",   
-        order?.status === "cancled" && "text-[14px] font-semibold text-red-800",   
-        order?.status === "refunded" && "text-[14px] font-semibold text-yellow-600",   
+        order?.status === "CONFIRMED" && "text-[14px] font-semibold",   
+        order?.status === "PROCESSING" && "text-[14px] font-semibold",   
+        order?.status === "PACKED" && "text-[14px] font-semibold",   
+        order?.status === "SHIPPED" && "text-[14px] font-semibold text-green-800",   
+        order?.status === "CANCELLED" && "text-[14px] font-semibold text-red-800",   
+        order?.status === "REFUNDED" && "text-[14px] font-semibold text-yellow-600",   
       )}>
         {order?.status}
         </div>
@@ -35,7 +35,7 @@ const Summary: React.FC<Props> = ({order}) => {
         </div>
         <div className='flex justify-between items-center mb-1'>
             <p className='text-[14px] font-semibold text-gray-700'>Subtotal</p>
-            <p className='text-[14px] text-gray-600'>₹ {order?.subTotal?.toFixed(2)}</p>
+            <p className='text-[14px] text-gray-600'>₹ {order?.subtotal?.toFixed(2)}</p>
         </div>
         <div className='flex justify-between items-center mb-1'>
             <p className='text-[14px] font-semibold text-gray-700'>Shipping Charge</p>

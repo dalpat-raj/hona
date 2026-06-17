@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { db } from "@/lib/db";
 import { app } from "@/lib/firebaseAdmin";
+import { normalizePhone } from "@/lib/helpers";
 
 export async function POST(req: NextRequest) {
   const expiresIn = 60 * 60 * 24 * 10 * 1000; // 10 days (ms)
@@ -29,7 +30,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const phone = decoded.phone_number;
+    const phone = normalizePhone(decoded.phone_number!);
+
     if (!phone) {
       return NextResponse.json(
         { success: false, message: "Phone number not found" },

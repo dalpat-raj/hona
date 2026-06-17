@@ -39,16 +39,16 @@ const SideNav = () => {
         {/* bottom */}
         <div className="absolute bottom-0 py-12 flex flex-col gap-4">
           <Link href="/dashboard/setting">
-            <div className="flex justify-start gap-2 items-center text-white">
+            <div className="flex justify-start gap-2 items-center ">
               <TfiSettings size={20} />
-              <p className="text-[14px] text-white">Setting</p>
+              <p className="text-[14px] ">Setting</p>
             </div>
           </Link>
 
           {/* <LogoutButton> */}
           <div
             onClick={() => onClick()}
-            className="flex justify-start gap-2 items-center text-white"
+            className="flex justify-start gap-2 items-center "
           >
             <RiLogoutCircleRLine size={20} />
             <p className="text-[14px]">{isPending ? "Wait" : "Sign Out"}</p>

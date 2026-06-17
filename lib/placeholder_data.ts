@@ -18,11 +18,11 @@ export const userProfileOption = [
     icon: TbUsers,
     url: "/profile"
   },
-  // {
-  //     title: "My Orders",
-  //     icon: GoGift,
-  //     url: "/profile/orders"
-  // },
+  {
+      title: "My Orders",
+      icon: GoGift,
+      url: "/profile/orders"
+  },
   
   {
       title: "My Addresss",
@@ -52,21 +52,21 @@ export const sideNavData = [
         icon: RxDashboard,
         url: "/dashboard/products"
     },
-    // {
-    //     title: "Orders",
-    //     icon: MdOutlineShoppingCart,
-    //     url: "/dashboard/orders"
-    // },
+    {
+        title: "Orders",
+        icon: MdOutlineShoppingCart,
+        url: "/dashboard/orders"
+    },
     // {
     //     title: "Events",
     //     icon: CiCalendar,
     //     url: "/dashboard/events"
     // },
-    // {
-    //   title: "Coupon",
-    //   icon: RiCouponLine,
-    //   url: "/dashboard/coupon"
-    // },
+    {
+      title: "Coupon",
+      icon: RiCouponLine,
+      url: "/dashboard/coupon"
+    },
     {
       title: "Banner",
       icon: CiImageOn,
@@ -83,20 +83,25 @@ export const sideNavData = [
       url: "/dashboard/brand"
     },
     {
+      title: "Blog",
+      icon: HiOutlineDuplicate,
+      url: "/dashboard/blog"
+    },
+    {
       title: "Reviews",
       icon: IoIosStarHalf,
       url: "/dashboard/reviews"
     },
-    // {
-    //   title: "Customers",
-    //   icon: TbUsers,
-    //   url: "/dashboard/customers"
-    // },
-    // {
-    //   title: "Admin",
-    //   icon: MdOutlineAdminPanelSettings,
-    //   url: "/dashboard/admin"
-    // },
+    {
+      title: "Customers",
+      icon: TbUsers,
+      url: "/dashboard/customers"
+    },
+    {
+      title: "Admin",
+      icon: MdOutlineAdminPanelSettings,
+      url: "/dashboard/admin"
+    },
 
 ]
 

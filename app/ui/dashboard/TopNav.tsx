@@ -35,7 +35,7 @@ const TopNav = () => {
         })}
       >
         <Link href="/dashboard/products/createProduct">
-          <div className="flex justify-center items-center gap-2 rounded-lg text-green bg-white text-[14px] px-4 py-1">
+          <div className="flex justify-center items-center gap-2 rounded-lg text-white bg-[#111827] text-[14px] px-4 py-1">
             <FaPlus size={18} />
             <p>Add Product</p>
           </div>
@@ -48,7 +48,7 @@ const TopNav = () => {
         })}
       >
         <Link href="/dashboard/events/createEvent">
-          <div className="flex justify-center items-center gap-2 rounded-lg text-green bg-white text-[14px] px-4 py-1">
+          <div className="flex justify-center items-center gap-2 rounded-lg text-white bg-[#111827] text-[14px] px-4 py-1">
             <FaPlus size={18} />
             <p>Add Event</p>
           </div>
@@ -61,7 +61,7 @@ const TopNav = () => {
         })}
       >
         <Link href="/dashboard/coupon/createCoupon">
-          <div className="flex justify-center items-center gap-2 rounded-lg text-green bg-white text-[14px] px-4 py-1">
+          <div className="flex justify-center items-center gap-2 rounded-lg text-white bg-[#111827] text-[14px] px-4 py-1">
             <FaPlus size={18} />
             <p>Add Coupon</p>
           </div>
@@ -74,7 +74,7 @@ const TopNav = () => {
         })}
       >
         <Link href="/dashboard/collection/createCollection">
-          <div className="flex justify-center items-center gap-2 rounded-lg text-green bg-white text-[14px] px-4 py-1">
+          <div className="flex justify-center items-center gap-2 rounded-lg text-white bg-[#111827] text-[14px] px-4 py-1">
             <FaPlus size={18} />
             <p>Add Collection</p>
           </div>
@@ -86,7 +86,7 @@ const TopNav = () => {
         })}
       >
         <Link href="/dashboard/brand/createBrand">
-          <div className="flex justify-center items-center gap-2 rounded-lg text-green bg-white text-[14px] px-4 py-1">
+          <div className="flex justify-center items-center gap-2 rounded-lg text-white bg-[#111827] text-[14px] px-4 py-1">
             <FaPlus size={18} />
             <p>Add Brand</p>
           </div>
@@ -104,7 +104,7 @@ const TopNav = () => {
             className="bg-white py-1 pl-8 rounded-md w-[25vw] max-md:w-[35vw]"
           />
         </div>
-        <div className="flex justify-end items-center gap-4 max-sm:gap-2">
+        <div className="flex justify-end items-center gap-4 max-sm:gap-2 text-black">
           <div>
             <HiOutlineDotsVertical size={20} />
           </div>

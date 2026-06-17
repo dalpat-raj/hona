@@ -15,14 +15,13 @@ const OrderCard = ({order}:Props) => {
   
   return (
     <Link href={`/dashboard/orders/${order.id}`}>
-    <div className='grid grid-cols-8 items-center max-sm:grid-cols-4 shadow-custom-shadow rounded-xl mb-4 px-2 py-2'>
-        <div className='text-[14px] font-semibold col-span-1 text-gray-600'>#{order.id}</div>
-        <div className='text-[14px] col-span-1 text-gray-600 max-sm:hidden'>{order?.user?.name}</div>
+    <div className='grid grid-cols-7 items-center max-sm:grid-cols-4  bg-white rounded-xl mb-4 px-2 py-2'>
+        <div className='text-[14px] font-semibold col-span-2 text-gray-600'>#{order.orderNumber}</div>
         <div className='text-[14px] col-span-1 text-gray-600'>Rs. {order.totalAmount.toFixed(2)}</div>
-        <div className='text-[14px] col-span-1 text-gray-600 max-sm:hidden'>{order.paymentInfoId}</div>
+        <div className='text-[14px] col-span-1 text-gray-600 max-sm:hidden'>{order.paymentStatus}</div>
         <div className='text-[14px] col-span-1 text-gray-600'>{formatDate(new Date(order.createdAt))}</div>
         <div  className={clsx(
-        "text-[14px] col-span-2 max-sm:col-span-1 text-gray-600 flex justify-center items-center",
+        "text-[14px] col-span-1 text-gray-600 flex justify-center items-center",
         order.status === "Order Confirmed" && "bg-green-100 w-max py-1 px-4 rounded-lg font-semibold",   
         order.status === "pickup" && "bg-gray-100 w-max py-1 px-4 rounded-lg font-semibold",   
         order.status === "shipped" && "bg-green-100 w-max py-1 px-4 rounded-lg font-semibold",   

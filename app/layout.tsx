@@ -90,10 +90,13 @@ export default async function RootLayout({
       lang="en"
       className={cn(poppins.className, "font-sans", geist.variable)}
     >
-      <link
-  rel="stylesheet"
-  href="https://custom-login-sr.netlify.app/assets/styles/shopify.css"
+      <head>
+        <link
+ rel="stylesheet"
+ href="https://checkout-ui.shiprocket.com/assets/styles/shopify.css"
 />
+
+      </head>
       <body>
         <StoreProvider>
           <Toaster position="top-right" />
@@ -103,9 +106,9 @@ export default async function RootLayout({
           {role !== "ADMIN" && <Footer />}
         </StoreProvider>
         <Script
-  src="https://custom-login-sr.netlify.app/assets/js/channels/login.js"
-  strategy="afterInteractive"
-/>
+          src="https://custom-login-sr.netlify.app/assets/js/channels/login.js"
+          strategy="afterInteractive"
+        />
         <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -117,6 +120,7 @@ export default async function RootLayout({
             }),
           }}
         />
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>
     </html>
   );

@@ -31,7 +31,7 @@ const Cart = (props: Props) => {
   return (
     <div className="w-full grid grid-cols-12 max-sm:grid-cols-1 gap-6 my-8 max-sm:my-4">
       {cartItem?.length ? (
-        <div className="no-scrollbar col-span-7 p-4 shadow-custom-shadow rounded-md flex flex-col gap-4">
+        <div className="no-scrollbar col-span-7 p-4 border border-gray rounded-md flex flex-col gap-4">
           {cartItem?.map((item, i) => (
             <CartItemCard
               item={item}
@@ -53,9 +53,10 @@ const Cart = (props: Props) => {
       )}
 
       {cartItem && (
-        <div className="col-span-4 max-sm:col-span-7 max-sm:shadow-custom-shadow rounded-md overflow-hidden">
-          <div className="p-4 bg-[#73c582] text-white">
-            <div className="flex justify-between items-center">
+        <div className="col-span-4 max-sm:col-span-7 border border-gray rounded-md overflow-hidden">
+          <div className="p-4 text-blue flex flex-col h-full justify-between">
+            <div>
+              <div className="flex justify-between items-center">
               <p className="text-[18px] font-semibold">Total</p>
               <p className="text-[14px] font-semibold">
                 Rs. {totalPrice?.toFixed(2)}
@@ -64,8 +65,9 @@ const Cart = (props: Props) => {
             <p className="text-[14px]">
               Tax and Shipping calculated at checkout
             </p>
-            <button className=" w-full mt-4 bg-green-900 block py-2 font-semibold text-[14px] rounded-lg">
-              <Link href={"/cart/buy-now"}>PROCESS TO CHAECKOUTs</Link>
+            </div>
+            <button className=" w-full mt-4 bg-[#333] text-white block py-2 font-semibold text-[14px] rounded-lg">
+              <Link href={"/checkout"}>PROCESS TO CHAECKOUT</Link>
             </button>
           </div>
         </div>

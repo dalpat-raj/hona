@@ -12,7 +12,7 @@ type Props = {
 
 const Status = ({order}: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); 
     setIsLoading(true)
@@ -20,7 +20,7 @@ const Status = ({order}: Props) => {
     try {
       const res = await orderStatusChange(formData);
       if(res.success) toast.success(res.success)
-      if(res.error) toast.success(res.error)
+      if(res.error) toast.error(res.error)
     } catch (error) {
       console.error('Error submitting form:', error);
     } finally {
@@ -36,15 +36,17 @@ const Status = ({order}: Props) => {
             <div className='w-full'>
             <select name="status" className='bg-gray-100 focus:outline-0 py-1 px-4 text-[14px] font-semibold border border-gray-300 w-full rounded-lg mb-2'>
                 <option value={order?.status}>{order?.status}</option>
-                <option value="pickup">pickup</option>
-                <option value="shipped">shipped</option>
-                <option value="delivered">delivered</option>
-                <option value="cancled">cancled</option>
-                <option value="refunded">refunded</option>
+                <option value="PROCESSING">PROCESSING</option>
+                <option value="PACKED">PACKED</option>
+                <option value="SHIPPED">SHIPPED</option>
+                <option value="OUT_FOR_DELIVERY">OUT_FOR_DELIVERY</option>
+                <option value="DELIVERED">DELIVERED</option>
+                <option value="CANCELLED">CANCELLED</option>
             </select>
             <input 
-            type="number" 
+            type="hidden" 
             name='id' 
+            value={order.id}
             defaultValue={order?.id}
             className='hidden'
             />

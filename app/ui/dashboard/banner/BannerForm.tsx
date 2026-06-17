@@ -15,37 +15,55 @@ type Props = {
 
 export function BannerForm({ setOpen }: Props) {
   const { image, uploadFile, reset } = useImageUpload();
+  const {
+    image: desktopImage,
+    uploadFile: uploadDesktopFile,
+    reset: resetDesktop,
+  } = useImageUpload();
+
+  const {
+    image: mobileImage,
+    uploadFile: uploadMobileFile,
+    reset: resetMobile,
+  } = useImageUpload();
   const [loading, setLoading] = useState(false);
   const isUploading = image?.loading;
 
-const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  if (!image?.url || !image?.fileId) {
-    toast.error("Please upload image");
-    return;
-  }
+    if (
+      !desktopImage?.url ||
+      !desktopImage?.fileId ||
+      !mobileImage?.url ||
+      !mobileImage?.fileId
+    ) {
+      toast.error("Please upload both Desktop & Mobile banner");
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  const formData = new FormData(event.currentTarget);
+    const formData = new FormData(event.currentTarget);
 
-  try {
-    const data = await createBanner(
-      image.url,
-      image.fileId,
-      formData
-    );
+    try {
+      const data = await createBanner(
+        desktopImage.url,
+        desktopImage.fileId,
+        mobileImage.url,
+        mobileImage.fileId,
+        formData,
+      );
 
-    if (data?.success) toast.success(data.success);
-    if (data?.error) toast.error(data.error);
-  } catch (error) {
-    toast.error("Error submitting form 😢");
-  } finally {
-    setOpen(false);
-    setLoading(false);
-  }
-};
+      if (data?.success) toast.success(data.success);
+      if (data?.error) toast.error(data.error);
+    } catch (error) {
+      toast.error("Error submitting form 😢");
+    } finally {
+      setOpen(false);
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full h-full flex justify-center items-center">
@@ -69,12 +87,13 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
             />
           </div>
 
-          <div className="my-4 w-full h-[270px] rounded-md border border-dashed border-green flex justify-center items-center relative">
+          <div className="grid grid-cols-6 max-md:grid-cols-1 gap-4 my-4">
+            <div className="col-span-4 rounded-md border border-dashed border-[#333] flex justify-center items-center relative">
             {image ? (
               <div className="w-full h-full relative">
                 {/* Change Button */}
                 <button className="rounded-lg bg-green-700 text-blue text-[14px] px-2 py-1 absolute right-[5px] top-[5px] z-10">
-                  Change
+                  Change Image
                 </button>
 
                 {/* Skeleton OR Image */}
@@ -93,11 +112,42 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
               </div>
             ) : (
               <ImageUploader
-                image={image}
-                onFileSelect={uploadFile}
-                onRemove={reset}
+                image={desktopImage}
+                onFileSelect={uploadDesktopFile}
+                onRemove={resetDesktop}
               />
             )}
+          </div>
+          <div className="col-span-2 rounded-md border border-dashed border-[#333] flex justify-center items-center relative">
+            {image ? (
+              <div className="w-full h-full relative">
+                {/* Change Button */}
+                <button className="rounded-lg bg-green-700 text-blue text-[14px] px-2 py-1 absolute right-[5px] top-[5px] z-10">
+                  Change Image
+                </button>
+
+                {/* Skeleton OR Image */}
+                {image.loading ? (
+                  <ImageSkeleton />
+                ) : (
+                  image.url && (
+                    <Image
+                      src={image.url}
+                      alt="banner"
+                      fill
+                      className="object-cover rounded-md p-1"
+                    />
+                  )
+                )}
+              </div>
+            ) : (
+              <ImageUploader
+                image={mobileImage}
+                onFileSelect={uploadMobileFile}
+                onRemove={resetMobile}
+              />
+            )}
+          </div>
           </div>
 
           <div className="w-full h-8">

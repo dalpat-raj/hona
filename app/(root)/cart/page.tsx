@@ -3,7 +3,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="w-full px-12 pr-0 max-md:px-4 max-sm:px-2 overflow-hidden bg-bg">
+    <div className="w-full px-12 pr-0 max-md:px-4 max-sm:px-2 overflow-hidden bg-white">
       <Cart />
     </div>
   );

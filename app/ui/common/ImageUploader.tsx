@@ -15,7 +15,7 @@ export default function ImageUploader({
   onRemove,
 }: Props) {
   return (
-    <div className="w-full h-[270px] rounded-md border border-dashed border-green flex justify-center items-center relative">
+    <div className="w-full h-[270px] rounded-md border border-dashed border-[#333] flex justify-center items-center relative">
       {image ? (
         <div className="w-full h-full relative">
           <button

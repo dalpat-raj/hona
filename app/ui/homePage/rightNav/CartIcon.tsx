@@ -35,7 +35,7 @@ const CartIcon = (props: Props) => {
         onClick={() => setOpenCart(true)}
       >
         <MdOutlineShoppingCart size={21} color="text-blue" />
-        <p className="w-5 h-5 absolute -top-2/3 -right-2 bg-bga text-blue text-sm flex items-center justify-center rounded-full">
+        <p className="w-5 h-5 absolute -top-2/3 -right-2 bg-blue text-white text-sm flex items-center justify-center rounded-full">
           {cartCount}
         </p>
       </div>

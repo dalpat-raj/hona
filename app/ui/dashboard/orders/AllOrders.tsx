@@ -30,11 +30,12 @@ const AllOrders = () => {
     query.append('limit', limit.toString());
     
     try {
-      const response = await fetch(`/api/createOrder?${query.toString()}`, { method: 'GET' });
+      const response = await fetch(`/api/admin/orders?${query.toString()}`, { method: 'GET' });
       const {orders, totalOrders, error} = await response.json();
       if(error){
         toast.error(error?.error);
       }
+      
       setOrders(orders);      
       setTotalPages(Math.ceil(totalOrders / limit));
     } catch (error) {
@@ -61,18 +62,17 @@ const AllOrders = () => {
   return (
     <div className="">
 
-      <div className='bg-gray-100'>
+      <div className='bg-white rounded-md px-4'>
         <TopNav orderType={orderType} setOrderType={setOrderType}/>
       </div>
 
-      <div className="py-2 shadow-lg mb-4">
-        <div className="grid grid-cols-8 max-sm:grid-cols-4 px-4">
-          <div className="col-span-1 text-[14px] font-semibold">Id</div>
-          <div className="col-span-1 text-[14px] font-semibold max-sm:hidden">Name</div>
+      <div className="py-2 mb-4 bg-white rounded-md mt-4">
+        <div className="grid grid-cols-7 max-sm:grid-cols-4 px-4">
+          <div className="col-span-2 text-[14px] font-semibold">Order Number</div>
           <div className="col-span-1 text-[14px] font-semibold">Price</div>
           <div className="col-span-1 text-[14px] font-semibold max-sm:hidden">Payment</div>
           <div className="col-span-1 text-[14px] font-semibold">Date</div>
-          <div className="col-span-2 max-sm:col-span-1 text-[14px] font-semibold">Status</div>
+          <div className="col-span-1 text-[14px] font-semibold">Status</div>
           <div className="col-span-1 text-[14px] font-semibold max-sm:hidden">Action</div>
         </div>
       </div>
